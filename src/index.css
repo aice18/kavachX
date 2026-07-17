@@ -7,21 +7,21 @@
 }
 
 body {
-  @apply bg-[#06090e] text-slate-300 antialiased;
+  @apply bg-[#13151A] text-slate-300 antialiased;
 }
 
-/* Custom Scrollbar for dark theme */
+/* Custom minimal glassy scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0b0f19;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: rgba(255, 255, 255, 0.2);
 }

@@ -26,7 +26,16 @@ Your communication style:
 - Use technical terminology appropriate for senior SOC analysts and CISOs
 - When you don't have enough context, ask a targeted clarifying question
 
-Always ground your answers in the incident data provided. Do not make up numbers. If the question is general (no incident context), answer with domain expertise.`;
+Always ground your answers in the incident data provided. Do not make up numbers. If the question is general (no incident context), answer with domain expertise.
+
+If you recommend taking a specific action (like isolating an IP, quarantining an asset, or generating a report), you MUST include a special action token on a new line at the end of your response.
+Supported actions are:
+- [ACTION:ISOLATE_IP]
+- [ACTION:QUARANTINE_ASSET]
+- [ACTION:GENERATE_REPORT]
+
+Example: "I recommend we isolate the suspicious IP address immediately to prevent further lateral movement.
+[ACTION:ISOLATE_IP]"`;
 
 export async function streamGeminiResponse(
   question: string,

@@ -1,7 +1,54 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Database, Filter, GitMerge, Activity, Server, ActivitySquare, Target, Hexagon, Shield, Brain } from 'lucide-react';
 
 export function DataPipeline() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    let direction = 1;
+    let animationFrameId: number;
+    let lastTime = performance.now();
+
+    const scroll = (time: number) => {
+      const delta = time - lastTime;
+      if (delta > 16) {
+        el.scrollLeft += direction * 0.5; // Scroll speed
+
+        if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 1) {
+          direction = -1; // Reverse
+        } else if (el.scrollLeft <= 0) {
+          direction = 1; // Forward
+        }
+        lastTime = time;
+      }
+      animationFrameId = requestAnimationFrame(scroll);
+    };
+
+    // Pause briefly before starting the scroll
+    const timer = setTimeout(() => {
+      animationFrameId = requestAnimationFrame(scroll);
+    }, 2000);
+
+    // Pause on hover
+    const handleMouseEnter = () => cancelAnimationFrame(animationFrameId);
+    const handleMouseLeave = () => {
+      lastTime = performance.now();
+      animationFrameId = requestAnimationFrame(scroll);
+    };
+
+    el.addEventListener('mouseenter', handleMouseEnter);
+    el.addEventListener('mouseleave', handleMouseLeave);
+
+    return () => {
+      clearTimeout(timer);
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
+      el.removeEventListener('mouseenter', handleMouseEnter);
+      el.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
   const nodes = [
     { id: 'collection', label: 'Event Collection Layer', icon: Database, status: 'active', desc: 'Aggregating logs from ATMs, UPI, and Core Banking.' },
     { id: 'normalization', label: 'Data Normalization', icon: Filter, status: 'active', desc: 'Standardizing telemetry into the common schema.' },
@@ -25,7 +72,10 @@ export function DataPipeline() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-indigo-900/10 via-[#020617]/0 to-transparent pointer-events-none" />
         
         {/* Horizontal scrollable pipeline area */}
-        <div className="relative z-10 flex-1 overflow-x-auto pb-8 pt-4 scrollbar-thin scrollbar-thumb-indigo-500/50 scrollbar-track-transparent">
+        <div 
+          ref={scrollRef}
+          className="relative z-10 flex-1 overflow-x-auto pb-8 pt-4 scrollbar-thin scrollbar-thumb-indigo-500/50 scrollbar-track-transparent cursor-ew-resize"
+        >
           <div className="flex items-center min-w-max px-4">
             {nodes.map((node, i) => (
               <React.Fragment key={node.id}>

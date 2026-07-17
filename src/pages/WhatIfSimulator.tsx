@@ -20,9 +20,9 @@ function BlastRadiusGraph({ affectedNodes, assetId }: { affectedNodes: any[]; as
     },
     data: { label: `${n.label}\n${n.id}` },
     style: {
-      background: n.id === assetId ? '#450a0a' : n.isFlagged ? '#311B4E' : '#0f172a',
-      color: n.id === assetId ? '#fca5a5' : n.isFlagged ? '#c084fc' : '#cbd5e1',
-      border: `2px solid ${n.id === assetId ? '#ef4444' : n.isFlagged ? '#a855f7' : '#334155'}`,
+      background: n.id === assetId ? '#1e3a8a' : n.isFlagged ? '#1e40af' : '#1e293b',
+      color: n.id === assetId ? '#bfdbfe' : n.isFlagged ? '#93c5fd' : '#cbd5e1',
+      border: `2px solid ${n.id === assetId ? '#3b82f6' : n.isFlagged ? '#60a5fa' : '#334155'}`,
       borderRadius: '8px',
       padding: '10px',
       fontSize: '10px',
@@ -30,9 +30,9 @@ function BlastRadiusGraph({ affectedNodes, assetId }: { affectedNodes: any[]; as
       width: 130,
       textAlign: 'center' as const,
       boxShadow: n.id === assetId
-        ? '0 0 20px rgba(239,68,68,0.5)'
+        ? '0 0 20px rgba(59,130,246,0.5)'
         : n.isFlagged
-        ? '0 0 12px rgba(168,85,247,0.3)'
+        ? '0 0 12px rgba(96,165,250,0.3)'
         : 'none',
     },
   }));
@@ -44,8 +44,8 @@ function BlastRadiusGraph({ affectedNodes, assetId }: { affectedNodes: any[]; as
       source: assetId,
       target: n.id,
       animated: true,
-      style: { stroke: '#ef4444', strokeWidth: 2, strokeDasharray: '5,5' },
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#ef4444' },
+      style: { stroke: '#3b82f6', strokeWidth: 2, strokeDasharray: '5,5' },
+      markerEnd: { type: MarkerType.ArrowClosed, color: '#3b82f6' },
     }));
 
   const [nodes] = useNodesState(flowNodes);
@@ -86,12 +86,12 @@ export function WhatIfSimulator() {
 
   return (
     <div className="space-y-6 animate-in fade-in duration-500 relative z-10">
-      <header className="mb-6">
-        <h1 className="text-4xl font-bold text-white tracking-tighter drop-shadow-[0_0_15px_rgba(255,255,255,0.2)] flex items-center">
+      <header className="mb-8">
+        <h1 className="text-4xl md:text-5xl font-medium text-white tracking-tight flex items-center">
           What-If Simulator
-          <span className="ml-4 text-[10px] bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 px-2 py-1 rounded uppercase tracking-widest shadow-[0_0_8px_rgba(34,211,238,0.3)]">Graph-Based</span>
+          <span className="ml-4 text-[9px] bg-blue-500/10 text-blue-500 border border-blue-500/20 px-2.5 py-1 rounded-full uppercase tracking-[0.2em] font-bold">Graph-Based</span>
         </h1>
-        <p className="text-cyan-500/70 mt-2 text-sm uppercase tracking-widest font-semibold flex items-center">
+        <p className="text-blue-500 mt-3 text-[11px] uppercase tracking-[0.2em] font-medium flex items-center">
           <GitPullRequest className="h-4 w-4 mr-2" /> BFS graph traversal · Predictive blast radius and financial exposure analysis
         </p>
       </header>
@@ -100,52 +100,50 @@ export function WhatIfSimulator() {
 
         {/* Left Panel — Controls */}
         <div className="lg:col-span-1 space-y-5">
-          <div className="bg-[#020617]/60 backdrop-blur-lg border border-indigo-500/20 rounded-2xl p-6 shadow-[0_4px_30px_-5px_rgba(79,70,229,0.15)] relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-[40px] pointer-events-none" />
-            <h2 className="text-sm font-bold text-slate-200 mb-5 uppercase tracking-widest flex items-center relative z-10">
-              <GitPullRequest className="h-4 w-4 mr-2 text-cyan-400" /> Scenario Parameters
+          <div className="bg-[#1C1F26] border border-[#272B36] rounded-2xl p-8 shadow-sm">
+            <h2 className="text-[10px] font-medium text-white/70 mb-6 uppercase tracking-[0.2em] flex items-center">
+              <GitPullRequest className="h-4 w-4 mr-2 text-blue-500" /> Scenario Parameters
             </h2>
-            <form onSubmit={handleSimulate} className="space-y-4 relative z-10">
+            <form onSubmit={handleSimulate} className="space-y-5">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Target Asset / Node ID</label>
+                <label className="block text-[9px] font-bold uppercase tracking-[0.2em] text-white/40 mb-3">Target Asset / Node ID</label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Search className="h-4 w-4 text-slate-500" />
+                  <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <Search className="h-4 w-4 text-white/30" />
                   </div>
                   <input
                     type="text"
                     value={asset}
                     onChange={e => setAsset(e.target.value)}
                     required
-                    className="block w-full pl-10 pr-3 py-3 border border-indigo-500/30 rounded-xl bg-[#020617]/50 text-cyan-300 focus:outline-none focus:ring-2 focus:ring-cyan-500/50 focus:border-cyan-500 transition-all text-sm shadow-inner font-mono font-bold placeholder:text-slate-600 placeholder:font-normal"
+                    className="block w-full pl-11 pr-4 py-4 border border-[#272B36] rounded-xl bg-[#13151A] text-white focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-all text-sm font-mono placeholder:text-white/20"
                     placeholder="e.g. DB_CORE_1, EMP_8492"
                   />
                 </div>
-                <p className="text-[10px] text-cyan-500/50 mt-2 font-medium">Graph BFS traversal calculates true blast radius from entity relationships.</p>
+                <p className="text-[10px] text-white/40 mt-3 font-normal leading-relaxed">Graph BFS traversal calculates true blast radius from entity relationships.</p>
               </div>
               <button
                 type="submit"
                 disabled={loading || !asset}
-                className="w-full flex items-center justify-center py-3 px-4 border border-indigo-500/50 rounded-xl shadow-[0_0_15px_rgba(79,70,229,0.3)] text-sm font-bold tracking-widest uppercase text-white bg-indigo-600/80 hover:bg-indigo-500 hover:shadow-[0_0_25px_rgba(79,70,229,0.5)] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full flex items-center justify-center py-4 px-4 border border-blue-500/20 rounded-xl shadow-sm text-[10px] font-bold tracking-[0.2em] uppercase text-white bg-blue-600 hover:bg-blue-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading ? <><Loader2 className="animate-spin h-5 w-5 mr-2" /> Traversing Graph...</> : <><AlertTriangle className="h-5 w-5 mr-2" /> Run Scenario</>}
+                {loading ? <><Loader2 className="animate-spin h-5 w-5 mr-2" /> Traversing...</> : <><AlertTriangle className="h-5 w-5 mr-2" /> Run Scenario</>}
               </button>
             </form>
           </div>
 
           {/* Presets */}
-          <div className="bg-[#020617]/60 backdrop-blur-lg border border-indigo-500/20 rounded-2xl p-5 shadow-[0_4px_30px_-5px_rgba(79,70,229,0.15)] relative overflow-hidden">
-            <div className="absolute bottom-0 right-0 w-32 h-32 bg-cyan-500/5 rounded-full blur-[40px] pointer-events-none" />
-            <h2 className="text-[10px] font-bold text-slate-400 mb-4 uppercase tracking-widest relative z-10">Preset Scenarios</h2>
-            <div className="space-y-2 relative z-10">
+          <div className="bg-[#1C1F26] border border-[#272B36] rounded-2xl p-6 shadow-sm">
+            <h2 className="text-[10px] font-medium text-white/70 mb-5 uppercase tracking-[0.2em]">Preset Scenarios</h2>
+            <div className="space-y-3">
               {PRESET_SCENARIOS.map(p => (
                 <button
                   key={p.id}
                   onClick={() => setAsset(p.id)}
-                  className="w-full text-left px-4 py-3 rounded-lg border border-transparent hover:border-cyan-500/30 hover:bg-indigo-500/10 transition-all group"
+                  className="w-full text-left px-5 py-4 rounded-xl border border-[#272B36] bg-[#13151A] hover:border-blue-500/50 hover:bg-[#272B36] transition-all group"
                 >
-                  <div className="font-mono text-sm text-cyan-300 font-bold group-hover:text-cyan-200">{p.label}</div>
-                  <div className="text-[10px] text-slate-500 mt-0.5 uppercase tracking-wider font-semibold">{p.desc}</div>
+                  <div className="font-mono text-sm text-white/90 group-hover:text-white">{p.label}</div>
+                  <div className="text-[9px] text-white/50 mt-1.5 uppercase tracking-[0.1em] font-normal">{p.desc}</div>
                 </button>
               ))}
             </div>
@@ -155,58 +153,55 @@ export function WhatIfSimulator() {
         {/* Right Panel — Results */}
         <div className="lg:col-span-2">
           {loading ? (
-            <div className="h-[600px] bg-[#020617]/60 backdrop-blur-lg border border-indigo-500/20 rounded-2xl flex flex-col items-center justify-center shadow-[0_4px_30px_-5px_rgba(79,70,229,0.15)] relative overflow-hidden">
-              <div className="absolute inset-0 bg-cyan-500/5 blur-[80px] pointer-events-none" />
-              <div className="relative z-10 text-center">
-                <div className="h-20 w-20 border-4 border-indigo-500/20 border-t-cyan-400 rounded-full animate-spin shadow-[0_0_15px_rgba(34,211,238,0.3)] mx-auto" />
-                <p className="text-cyan-300 mt-6 font-mono text-sm tracking-widest uppercase font-bold">Traversing relationship graph...</p>
-                <p className="text-slate-500 text-xs mt-2 uppercase tracking-wider font-semibold">BFS calculating blast radius and financial exposure</p>
+            <div className="h-[600px] bg-[#1C1F26] border border-[#272B36] rounded-2xl flex flex-col items-center justify-center shadow-sm">
+              <div className="text-center">
+                <div className="h-16 w-16 border-4 border-[#272B36] border-t-blue-500 rounded-full animate-spin mx-auto mb-8" />
+                <p className="text-white/60 font-mono text-[10px] tracking-[0.3em] uppercase font-medium">Traversing relationship graph...</p>
               </div>
             </div>
           ) : result ? (
-            <div className="space-y-5 animate-in slide-in-from-bottom-4 duration-500">
+            <div className="space-y-5 animate-in slide-in-from-bottom-4 duration-300">
               {/* Header */}
-              <div className="bg-[#020617]/60 backdrop-blur-lg border border-indigo-500/20 rounded-2xl p-6 shadow-[0_4px_30px_-5px_rgba(79,70,229,0.15)] relative overflow-hidden">
-                <div className="absolute top-0 right-1/4 w-64 h-64 bg-red-500/5 rounded-full blur-[80px] pointer-events-none" />
-                <div className="flex items-center justify-between mb-5 relative z-10">
-                  <h2 className="text-lg font-bold text-white tracking-wide uppercase">
-                    Blast Radius: <span className="text-red-400 font-mono drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]">{result.asset_id}</span>
+              <div className="bg-[#1C1F26] border border-[#272B36] rounded-2xl p-8 shadow-sm">
+                <div className="flex items-center justify-between mb-8">
+                  <h2 className="text-xl font-medium text-white tracking-wide uppercase">
+                    Blast Radius: <span className="text-blue-500 font-mono ml-2">{result.asset_id}</span>
                   </h2>
-                  <div className="flex items-center space-x-3">
-                    <span className="text-[10px] text-slate-500 font-mono font-bold">Graph depth: {result.blast_radius_depth} hops · {result.affected_node_count} nodes</span>
-                    <span className={`px-4 py-1.5 rounded-lg text-xs font-bold uppercase tracking-widest border shadow-lg ${result.compliance_risk === 'Critical' ? 'bg-red-500/10 text-red-400 border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]' : 'bg-amber-500/10 text-amber-400 border-amber-500/30'}`}>
+                  <div className="flex items-center space-x-4">
+                    <span className="text-[10px] text-white/50 font-mono font-medium tracking-widest">Graph depth: {result.blast_radius_depth} hops</span>
+                    <span className="px-4 py-1.5 rounded-full text-[9px] font-bold uppercase tracking-[0.2em] bg-red-500/10 text-red-500 border border-red-500/20">
                       {result.compliance_risk} Risk
                     </span>
                   </div>
                 </div>
 
                 {/* KPI Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5 relative z-10">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                   {[
-                    { icon: DollarSign, label: 'Loss Exposure', value: new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(result.loss_exposure_inr), color: 'red' },
-                    { icon: Users,       label: 'Customers Affected', value: result.customers_affected.toLocaleString(), color: 'indigo' },
-                    { icon: ShieldAlert, label: 'Branches Disrupted', value: String(result.branches_affected), color: 'indigo' },
-                    { icon: Clock,       label: 'Recovery Time', value: `${result.recovery_time_hours} hrs`, color: 'indigo' },
-                  ].map(({ icon: Icon, label, value, color }) => (
-                    <div key={label} className={`p-4 rounded-xl border relative overflow-hidden ${color === 'red' ? 'bg-red-500/10 border-red-500/30' : 'bg-indigo-500/10 border-indigo-500/30'}`}>
-                      <div className={`text-[10px] font-bold tracking-widest uppercase mb-2 flex items-center ${color === 'red' ? 'text-red-400' : 'text-indigo-300'}`}>
-                        <Icon className="h-3 w-3 mr-1" />{label}
+                    { icon: DollarSign, label: 'Loss Exposure', value: new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(result.loss_exposure_inr) },
+                    { icon: Users,       label: 'Customers', value: result.customers_affected.toLocaleString() },
+                    { icon: ShieldAlert, label: 'Branches', value: String(result.branches_affected) },
+                    { icon: Clock,       label: 'Recovery', value: `${result.recovery_time_hours} hrs` },
+                  ].map(({ icon: Icon, label, value }) => (
+                    <div key={label} className="p-5 rounded-xl bg-[#13151A] border border-[#272B36]">
+                      <div className="text-[9px] font-bold tracking-[0.2em] uppercase mb-3 flex items-center text-white/50">
+                        <Icon className="h-3.5 w-3.5 mr-2 text-blue-500" />{label}
                       </div>
-                      <div className={`text-2xl font-mono font-bold ${color === 'red' ? 'text-white' : 'text-cyan-400'}`}>{value}</div>
+                      <div className="text-2xl font-mono font-medium text-white">{value}</div>
                     </div>
                   ))}
                 </div>
 
                 {/* Recommended Controls */}
-                <div className="relative z-10">
-                  <h3 className="text-xs font-bold text-slate-300 uppercase tracking-widest mb-3 flex items-center">
-                    <ShieldAlert className="w-4 h-4 mr-2 text-cyan-400" /> Recommended Proactive Controls
+                <div>
+                  <h3 className="text-[10px] font-bold text-white/50 uppercase tracking-[0.2em] mb-4 flex items-center">
+                    <ShieldAlert className="w-3.5 h-3.5 mr-2 text-blue-500" /> Proactive Controls
                   </h3>
                   <div className="space-y-2">
                     {result.recommended_isolation.map((rec: string, i: number) => (
-                      <div key={i} className="flex items-center space-x-3 p-3 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
-                        <div className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_6px_rgba(34,211,238,0.8)] shrink-0" />
-                        <span className="text-sm text-indigo-100 font-medium">{rec}</span>
+                      <div key={i} className="flex items-center space-x-4 p-4 bg-[#13151A] border border-[#272B36] rounded-xl">
+                        <div className="h-1.5 w-1.5 rounded-full bg-blue-500 shrink-0" />
+                        <span className="text-xs text-white/80 font-normal">{rec}</span>
                       </div>
                     ))}
                   </div>
@@ -215,25 +210,22 @@ export function WhatIfSimulator() {
 
               {/* Blast Radius Graph */}
               {result.affected_nodes?.length > 0 && (
-                <div className="bg-[#020617]/60 backdrop-blur-lg border border-indigo-500/20 rounded-2xl overflow-hidden shadow-[0_4px_30px_-5px_rgba(79,70,229,0.15)]">
-                  <div className="p-4 border-b border-indigo-500/20 flex items-center space-x-2 bg-[#0f172a]/50">
-                    <Network className="h-4 w-4 text-red-400" />
-                    <span className="text-sm font-bold text-slate-200 uppercase tracking-widest">Blast Radius Relationship Graph</span>
-                    <span className="ml-auto text-[10px] text-slate-500 font-mono">{result.affected_node_count} nodes reachable</span>
+                <div className="bg-[#1C1F26] border border-[#272B36] rounded-2xl overflow-hidden shadow-sm">
+                  <div className="p-5 border-b border-[#272B36] flex items-center space-x-3">
+                    <Network className="h-4 w-4 text-white/50" />
+                    <span className="text-[10px] font-medium text-white/70 uppercase tracking-[0.2em]">Relationship Graph</span>
                   </div>
-                  <div className="h-72 bg-[#0b0f19]">
+                  <div className="h-80 bg-[#13151A]">
                     <BlastRadiusGraph affectedNodes={result.affected_nodes} assetId={result.asset_id} />
                   </div>
                 </div>
               )}
             </div>
           ) : (
-            <div className="h-[600px] bg-[#020617]/60 backdrop-blur-lg border border-indigo-500/20 rounded-2xl flex flex-col items-center justify-center shadow-[0_4px_30px_-5px_rgba(79,70,229,0.15)] relative overflow-hidden">
-              <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-cyan-900/10 via-[#020617]/0 to-transparent pointer-events-none" />
-              <div className="relative z-10 text-center">
-                <GitPullRequest className="h-14 w-14 text-indigo-500/30 mx-auto mb-6" />
-                <p className="text-slate-300 font-bold tracking-widest uppercase text-sm">Ready for Scenario Injection</p>
-                <p className="text-cyan-500/50 font-semibold tracking-wider text-xs mt-2 uppercase">Select an asset to model graph-based impact</p>
+            <div className="h-[600px] bg-[#1C1F26] border border-[#272B36] rounded-2xl flex flex-col items-center justify-center shadow-sm">
+              <div className="text-center">
+                <GitPullRequest className="h-12 w-12 text-white/20 mx-auto mb-6" />
+                <p className="text-white/40 font-medium tracking-[0.2em] uppercase text-[10px]">Awaiting Scenario Input</p>
               </div>
             </div>
           )}

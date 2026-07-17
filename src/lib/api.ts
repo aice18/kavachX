@@ -1,5 +1,6 @@
 import { db } from '../../server/db/memory.js';
 import { syntheticDataGenerator } from '../../server/data/synthetic.js';
+import { streamGeminiResponse } from '../../server/routes/gemini.js';
 
 let initialized = false;
 let initPromise: Promise<void> | null = null;
@@ -62,7 +63,15 @@ export async function fetchQuantumAssets() {
 }
 
 export async function askCopilot(incidentId: string | null, question: string) {
-  return { answer: "AI Copilot is in demo mode (frontend only). It cannot access the Gemini API without a backend.", incident_id: incidentId };
+  try {
+    const inc = incidentId ? db.incidents.find(i => i.incident_id === incidentId) : null;
+    const graph = { nodes: db.nodes, edges: db.edges };
+    const answer = await streamGeminiResponse(question, inc, graph);
+    return { answer, incident_id: incidentId };
+  } catch (err: any) {
+    console.error(err);
+    return { answer: "AI Copilot is in demo mode (frontend only). It cannot access the Gemini API without a backend.", incident_id: incidentId };
+  }
 }
 
 export async function triggerSimulation() {

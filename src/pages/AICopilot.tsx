@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Activity, AlertTriangle, GitPullRequest, Loader2, Brain, ChevronDown } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Send, Bot, User, Activity, AlertTriangle, GitPullRequest, Loader2, Brain, ChevronDown, PlayCircle, CheckCircle2 } from 'lucide-react';
 import { askCopilot } from '../lib/api';
 import { useKavachWebSocket } from '../lib/websocket';
 
@@ -136,32 +136,50 @@ export function AICopilot() {
 
         {/* Messages */}
         <div className="flex-1 overflow-y-auto p-6 space-y-5 relative z-10">
-          {messages.map((msg) => (
-            <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`flex items-start max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                <div className={`flex-shrink-0 h-9 w-9 rounded-xl flex items-center justify-center shadow-lg ${
-                  msg.role === 'user'
-                    ? 'bg-indigo-600/80 border border-indigo-400/50 shadow-[0_0_15px_rgba(79,70,229,0.3)] ml-3'
-                    : 'bg-[#0f172a] border border-cyan-500/30 shadow-[0_0_15px_rgba(34,211,238,0.2)] mr-3'
-                }`}>
-                  {msg.role === 'user'
-                    ? <User className="h-4 w-4 text-indigo-100" />
-                    : <Bot className="h-4 w-4 text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]" />
-                  }
-                </div>
-                <div className={`p-4 rounded-2xl ${
-                  msg.role === 'user'
-                    ? 'bg-indigo-600/20 border border-indigo-500/30 text-indigo-100 rounded-tr-sm'
-                    : 'bg-[#0f172a]/90 border border-slate-700/50 text-slate-300 rounded-tl-sm'
-                }`}>
-                  <p className="text-sm leading-relaxed tracking-wide whitespace-pre-wrap">{msg.content}</p>
-                  <div className={`text-[10px] mt-2 font-mono uppercase tracking-wider ${msg.role === 'user' ? 'text-indigo-400/70 text-right' : 'text-slate-600'}`}>
-                    {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          {messages.map((msg) => {
+            let content = msg.content;
+            let actionMatch = null;
+            
+            if (msg.role === 'assistant') {
+              const match = content.match(/\[ACTION:([A-Z_]+)\]/);
+              if (match) {
+                actionMatch = match[1];
+                content = content.replace(match[0], '').trim();
+              }
+            }
+
+            return (
+              <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
+                <div className={`flex items-start max-w-[85%] ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                  <div className={`flex-shrink-0 h-9 w-9 rounded-xl flex items-center justify-center shadow-lg ${
+                    msg.role === 'user'
+                      ? 'bg-indigo-600/80 border border-indigo-400/50 shadow-[0_0_15px_rgba(79,70,229,0.3)] ml-3'
+                      : 'bg-[#0f172a] border border-cyan-500/30 shadow-[0_0_15px_rgba(34,211,238,0.2)] mr-3'
+                  }`}>
+                    {msg.role === 'user'
+                      ? <User className="h-4 w-4 text-indigo-100" />
+                      : <Bot className="h-4 w-4 text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]" />
+                    }
+                  </div>
+                  <div className="flex flex-col">
+                    {content && (
+                      <div className={`p-4 rounded-2xl ${
+                        msg.role === 'user'
+                          ? 'bg-indigo-600/20 border border-indigo-500/30 text-indigo-100 rounded-tr-sm'
+                          : 'bg-[#0f172a]/90 border border-slate-700/50 text-slate-300 rounded-tl-sm'
+                      }`}>
+                        <p className="text-sm leading-relaxed tracking-wide whitespace-pre-wrap">{content}</p>
+                        <div className={`text-[10px] mt-2 font-mono uppercase tracking-wider ${msg.role === 'user' ? 'text-indigo-400/70 text-right' : 'text-slate-600'}`}>
+                          {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                      </div>
+                    )}
+                    {actionMatch && <ActionBlock actionType={actionMatch} />}
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
 
           {/* Loading indicator */}
           {isLoading && (
@@ -221,6 +239,53 @@ export function AICopilot() {
           </form>
         </div>
       </div>
+    </div>
+  );
+}
+
+function ActionBlock({ actionType }: { actionType: string }) {
+  const [state, setState] = useState<'pending' | 'executing' | 'done'>('pending');
+
+  const execute = () => {
+    setState('executing');
+    setTimeout(() => {
+      setState('done');
+    }, 2000);
+  };
+
+  const getLabel = () => {
+    switch (actionType) {
+      case 'ISOLATE_IP': return 'Isolate Suspicious IP';
+      case 'QUARANTINE_ASSET': return 'Quarantine Affected Asset';
+      case 'GENERATE_REPORT': return 'Generate Compliance Report';
+      default: return `Execute Action: ${actionType}`;
+    }
+  };
+
+  return (
+    <div className="mt-3 p-4 bg-[#0f172a] border border-slate-700/50 rounded-xl flex items-center justify-between w-full max-w-sm shadow-lg shadow-black/20">
+      <div className="flex flex-col mr-4">
+        <span className="text-sm font-semibold text-slate-200">{getLabel()}</span>
+        <span className="text-[10px] text-slate-500 font-mono mt-1">Automated Playbook Action</span>
+      </div>
+      {state === 'pending' && (
+        <button onClick={execute} className="flex items-center space-x-1.5 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-xs font-bold text-white transition-colors shrink-0 shadow-md shadow-indigo-500/20">
+          <PlayCircle className="w-4 h-4" />
+          <span>Approve</span>
+        </button>
+      )}
+      {state === 'executing' && (
+        <div className="flex items-center space-x-2 text-cyan-400 text-xs font-medium px-4 py-2 shrink-0">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          <span>Executing...</span>
+        </div>
+      )}
+      {state === 'done' && (
+        <div className="flex items-center space-x-1.5 text-emerald-400 text-xs font-medium px-4 py-2 bg-emerald-500/10 rounded-lg border border-emerald-500/20 shrink-0">
+          <CheckCircle2 className="w-4 h-4" />
+          <span>Completed</span>
+        </div>
+      )}
     </div>
   );
 }

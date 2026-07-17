@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AppLayout } from './components/layout/AppLayout';
 import { ExecutiveDashboard } from './pages/ExecutiveDashboard';
@@ -14,6 +15,7 @@ import { Login } from './pages/Login';
 import { WhatIfSimulator } from './pages/WhatIfSimulator';
 import { AICopilot } from './pages/AICopilot';
 import { DataPipeline } from './pages/DataPipeline';
+import { Landing } from './pages/Landing';
 import { isAuthenticated } from './lib/auth';
 
 // ── Protected Route Guard ───────────────────────────────────────────────
@@ -29,8 +31,9 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Landing />} />
         <Route
-          path="/"
+          path="/dashboard"
           element={
             <ProtectedRoute>
               <AppLayout />
@@ -38,17 +41,17 @@ export default function App() {
           }
         >
           <Route index element={<Navigate to="/dashboard/executive" replace />} />
-          <Route path="dashboard/executive" element={<ExecutiveDashboard />} />
-          <Route path="dashboard/soc" element={<SOCDashboard />} />
-          <Route path="dashboard/incident/:id" element={<IncidentDetail />} />
-          <Route path="dashboard/pipeline" element={<DataPipeline />} />
-          <Route path="dashboard/forecast" element={<Forecast />} />
-          <Route path="dashboard/quantum" element={<Quantum />} />
-          <Route path="dashboard/simulator" element={<WhatIfSimulator />} />
-          <Route path="dashboard/copilot" element={<AICopilot />} />
+          <Route path="executive" element={<ExecutiveDashboard />} />
+          <Route path="soc" element={<SOCDashboard />} />
+          <Route path="incident/:id" element={<IncidentDetail />} />
+          <Route path="pipeline" element={<DataPipeline />} />
+          <Route path="forecast" element={<Forecast />} />
+          <Route path="quantum" element={<Quantum />} />
+          <Route path="simulator" element={<WhatIfSimulator />} />
+          <Route path="copilot" element={<AICopilot />} />
         </Route>
-        {/* Catch-all: redirect unknown routes to login */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        {/* Catch-all: redirect unknown routes to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
