@@ -3,10 +3,13 @@ import { db } from '../../server/db/memory.js';
 import { syntheticDataGenerator } from '../../server/data/synthetic.js';
 
 let initialized = false;
+let initPromise: Promise<void> | null = null;
 async function initDb() {
   if (!initialized) {
-    await syntheticDataGenerator();
-    initialized = true;
+    if (!initPromise) {
+      initPromise = syntheticDataGenerator().then(() => { initialized = true; });
+    }
+    await initPromise;
   }
 }
 
