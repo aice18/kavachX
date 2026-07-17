@@ -251,6 +251,9 @@ What-If Simulator
 
 - Node.js 18+
 - npm
+- AI modolues
+- ML Engines
+- Database (Secure)
 - Google Gemini API Key
 
 ---
