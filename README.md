@@ -93,6 +93,8 @@ graph TD
 ### Prerequisites
 - Node.js 18+
 - A Gemini API key from [Google AI Studio](https://aistudio.google.com)
+- Ai models and ML prediction modules
+- basic cyber security exposure 
 
 ### Installation & Setup
 
