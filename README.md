@@ -8,7 +8,7 @@
 
 **Predict • Prioritize • Protect**
 
-Built with ❤️ by **Greybox Labs**
+Built by **Greybox Labs**
 
 ---
 
