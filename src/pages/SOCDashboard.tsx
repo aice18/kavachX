@@ -124,13 +124,12 @@ function IndiaThreatMap({ incidents }: { incidents: any[] }) {
 // Live event log terminal
 function EventLogTerminal() {
   const [logs, setLogs] = useState<string[]>([
-    '> [SYSTEM] KavachX SOC engine initialized',
-    '> [STREAM] Telemetry ingestion active — 4.2M events/hr',
-    '> [AI] Correlation engine scanning for cross-signal anomalies...',
-    '> [UPI] Normal transaction volume detected — Mumbai corridor',
     '> [VPN] Login from known IP — EMP_1102 — New Delhi',
+    '> [UPI] Normal transaction volume detected — Mumbai corridor',
+    '> [AI] Correlation engine scanning for cross-signal anomalies...',
+    '> [STREAM] Telemetry ingestion active — 4.2M events/hr',
+    '> [SYSTEM] KavachX SOC engine initialized',
   ]);
-  const logEndRef = useRef<HTMLDivElement>(null);
 
   const EVENT_POOL = [
     '[UPI] Transfer ₹{amt} — {city} — NORMAL',
@@ -153,14 +152,11 @@ function EventLogTerminal() {
         .replace('{ip}', `192.168.${Math.floor(Math.random() * 10)}.${Math.floor(Math.random() * 255)}`)
         .replace('{emp}', `EMP_${Math.floor(Math.random() * 9000) + 1000}`)
         .replace('{rows}', String(Math.floor(Math.random() * 1000) + 10));
-      setLogs(prev => [...prev.slice(-49), `> ${log}`]);
+      // Prepend newest log first, keep max 50
+      setLogs(prev => [`> ${log}`, ...prev].slice(0, 50));
     }, 2000);
     return () => clearInterval(tick);
   }, []);
-
-  useEffect(() => {
-    logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [logs]);
 
   return (
     <div className="bg-[#020617]/90 backdrop-blur border border-indigo-500/20 rounded-xl overflow-hidden h-full flex flex-col">
@@ -172,21 +168,20 @@ function EventLogTerminal() {
           <span className="text-[9px] text-emerald-400 font-bold uppercase tracking-widest">Streaming</span>
         </div>
       </div>
-      <div className="flex-1 overflow-y-auto p-3 space-y-0.5 font-mono text-[10px]">
+      <div className="flex-1 overflow-y-auto p-3 space-y-0.5 font-mono text-[10px] custom-scrollbar">
         {logs.map((log, i) => (
           <div
             key={i}
             className={`leading-relaxed ${
               log.includes('SUSPICIOUS') ? 'text-amber-400' :
               log.includes('CRITICAL') ? 'text-red-400' :
-              i === logs.length - 1 ? 'text-cyan-300' :
+              i === 0 ? 'text-cyan-300' : // Highlight newest log
               'text-slate-500'
             }`}
           >
             {log}
           </div>
         ))}
-        <div ref={logEndRef} />
       </div>
     </div>
   );
@@ -196,8 +191,8 @@ export function SOCDashboard() {
   const { activeIncidents } = useKavachWebSocket();
 
   return (
-    <div className="space-y-6 animate-in fade-in duration-500 relative z-10">
-      <header className="flex items-center justify-between mb-6 relative z-10">
+    <div className="space-y-6 animate-in fade-in duration-500 relative z-10 h-full flex flex-col">
+      <header className="flex items-center justify-between mb-2 relative z-10 shrink-0">
         <div>
           <h1 className="text-4xl font-bold text-white tracking-tighter drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">SOC Console</h1>
           <p className="text-cyan-500/70 mt-2 text-sm uppercase tracking-widest font-semibold flex items-center">
@@ -210,74 +205,88 @@ export function SOCDashboard() {
         </div>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6" style={{ height: 700 }}>
-
-        {/* Incident Feed */}
-        <div className="lg:col-span-1 bg-[#020617]/60 backdrop-blur-lg border border-indigo-500/20 rounded-2xl overflow-hidden flex flex-col shadow-[0_4px_30px_-5px_rgba(79,70,229,0.15)] relative">
-          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-cyan-400 to-indigo-500 opacity-50" />
-          <div className="p-5 border-b border-indigo-500/10 bg-indigo-500/5 relative z-10 shrink-0">
-            <h2 className="text-[10px] font-bold uppercase tracking-widest text-slate-300 flex items-center">
-              <Activity className="h-4 w-4 mr-2 text-cyan-400" /> Live Correlated Incidents
-              <span className="ml-auto text-[10px] font-mono text-cyan-400 bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">{activeIncidents.length}</span>
-            </h2>
-          </div>
-          <div className="flex-1 overflow-auto p-4 space-y-4 z-10 relative">
-            {activeIncidents.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-full text-center">
-                <Radio className="h-10 w-10 text-indigo-500/30 mb-4 animate-pulse" />
-                <p className="text-slate-300 font-bold uppercase tracking-widest text-sm">Awaiting telemetry...</p>
-                <p className="text-cyan-500/50 text-xs font-semibold tracking-wider uppercase mt-2">Correlation engine listening</p>
-              </div>
-            ) : (
-              activeIncidents.map((inc: any) => (
-                <Link to={`/dashboard/incident/${inc.incident_id}`} key={inc.incident_id} className="block group">
-                  <div className="bg-[#020617]/80 border border-indigo-500/20 rounded-xl p-4 group-hover:border-cyan-500/50 transition-all shadow-[0_0_15px_rgba(0,0,0,0.5)] group-hover:shadow-[0_0_20px_rgba(34,211,238,0.2)] relative overflow-hidden">
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)] opacity-50 group-hover:opacity-100 transition-opacity" />
-                    <div className="flex justify-between items-center mb-3 pl-2">
-                      <span className={`px-2.5 py-1 rounded text-[10px] font-bold uppercase tracking-widest border ${inc.severity === 'critical' ? 'bg-red-500/10 text-red-400 border-red-500/30 shadow-[0_0_8px_rgba(239,68,68,0.2)]' : inc.severity === 'high' ? 'bg-amber-500/10 text-amber-400 border-amber-500/30' : 'bg-slate-500/10 text-slate-400 border-slate-500/30'}`}>
-                        {inc.severity}
-                      </span>
-                      <span className="text-[10px] uppercase font-bold tracking-widest text-slate-500">
-                        {formatDistanceToNow(new Date(inc.updated_at), { addSuffix: true })}
-                      </span>
-                    </div>
-                    <h3 className="text-white font-bold text-sm mb-2 flex items-center pl-2">
-                      <span className="text-slate-400 font-medium mr-2">Entity:</span>
-                      <span className="text-cyan-300 font-mono">{inc.entity_id}</span>
-                    </h3>
-                    <p className="text-slate-400 text-xs line-clamp-2 leading-relaxed pl-2 font-medium mb-3">
-                      {inc.reasons?.[0]?.factor || 'Multiple anomalous events detected.'}
-                    </p>
-                    <div className="flex items-center justify-between pl-2 pt-2 border-t border-indigo-500/10">
-                      <div>
-                        <span className="text-[9px] uppercase tracking-widest text-red-400/70 font-bold block">Risk Score</span>
-                        <span className="text-red-400 font-mono font-bold text-lg">{inc.risk_score}</span>
-                      </div>
-                      <span className="text-cyan-400 font-bold uppercase tracking-widest text-[10px] bg-cyan-500/10 px-3 py-1.5 rounded-md border border-cyan-500/20 group-hover:bg-cyan-500/20">
-                        Investigate →
-                      </span>
-                    </div>
-                  </div>
-                </Link>
-              ))
-            )}
-          </div>
-        </div>
-
-        {/* Right Panel — Map + Log */}
-        <div className="lg:col-span-2 grid grid-rows-2 gap-4">
+      <div className="flex flex-col gap-6 flex-1 min-h-[750px]">
+        {/* Top Section: Map & Log side-by-side */}
+        <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 h-[400px]">
           {/* India Threat Map */}
-          <div className="bg-[#020617]/60 backdrop-blur-lg border border-indigo-500/20 rounded-2xl overflow-hidden shadow-[0_4px_30px_-5px_rgba(79,70,229,0.15)] relative">
-            <div className="absolute top-0 inset-x-0 p-4 z-10 bg-gradient-to-b from-[#020617]/80 to-transparent pointer-events-none">
-              <h2 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 flex items-center">
-                <Activity className="h-3 w-3 mr-2 text-cyan-400" /> Global Threat Origin Map
+          <div className="xl:col-span-8 bg-[#020617]/60 backdrop-blur-lg border border-indigo-500/30 rounded-2xl overflow-hidden shadow-[0_8px_30px_-5px_rgba(79,70,229,0.2)] relative group hover:border-cyan-500/40 transition-colors duration-500 h-full">
+            <div className="absolute top-0 inset-x-0 p-4 z-10 bg-gradient-to-b from-[#020617]/90 to-transparent pointer-events-none">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-slate-300 flex items-center">
+                <Radio className="h-4 w-4 mr-2 text-cyan-400 animate-pulse" /> Global Threat Origin Map
               </h2>
             </div>
             <IndiaThreatMap incidents={activeIncidents} />
           </div>
 
           {/* Live Event Log */}
-          <EventLogTerminal />
+          <div className="xl:col-span-4 shadow-[0_8px_30px_-5px_rgba(79,70,229,0.2)] rounded-2xl overflow-hidden border border-indigo-500/30 group hover:border-indigo-400/50 transition-colors duration-500 h-full">
+            <EventLogTerminal />
+          </div>
+        </div>
+
+        {/* Bottom Section: Incident Feed */}
+        <div className="bg-[#020617]/80 backdrop-blur-xl border border-indigo-500/30 rounded-2xl overflow-hidden flex flex-col shadow-[0_8px_30px_-5px_rgba(79,70,229,0.2)] relative">
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-red-500 via-amber-500 to-cyan-500 opacity-70" />
+          <div className="p-5 border-b border-indigo-500/20 bg-indigo-950/20 relative z-10 shrink-0 flex items-center justify-between">
+            <h2 className="text-xs font-bold uppercase tracking-widest text-slate-200 flex items-center">
+              <Activity className="h-4 w-4 mr-2 text-red-400" /> Live Alerts
+            </h2>
+            <span className="text-[10px] font-mono text-white bg-red-500/20 px-2.5 py-1 rounded border border-red-500/40 shadow-[0_0_10px_rgba(239,68,68,0.3)]">
+              {activeIncidents.length} Critical
+            </span>
+          </div>
+          
+          <div className="p-6 relative z-10">
+            {activeIncidents.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center opacity-70">
+                <Radio className="h-12 w-12 text-cyan-500/40 mb-4 animate-ping" />
+                <p className="text-slate-300 font-bold uppercase tracking-widest text-sm">Awaiting telemetry...</p>
+                <p className="text-cyan-500/50 text-xs font-semibold tracking-wider uppercase mt-2">Correlation engine listening</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {[...activeIncidents]
+                  .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
+                  .map((inc: any) => (
+                    <Link to={`/dashboard/incident/${inc.incident_id}`} key={inc.incident_id} className="block group">
+                      <div className="bg-[#0f172a]/90 border border-indigo-500/20 rounded-xl p-5 group-hover:border-cyan-400/60 transition-all duration-300 shadow-lg group-hover:shadow-[0_0_25px_rgba(34,211,238,0.15)] relative overflow-hidden group-hover:-translate-y-0.5 h-full flex flex-col justify-between">
+                        <div className={`absolute left-0 top-0 bottom-0 w-1.5 opacity-70 group-hover:opacity-100 transition-opacity ${inc.severity === 'critical' ? 'bg-red-500 shadow-[0_0_12px_rgba(239,68,68,1)]' : 'bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,1)]'}`} />
+                        
+                        <div>
+                          <div className="flex justify-between items-center mb-4 pl-3">
+                            <span className={`px-3 py-1 rounded text-[10px] font-black uppercase tracking-widest border ${inc.severity === 'critical' ? 'bg-red-500/10 text-red-400 border-red-500/30 shadow-[0_0_10px_rgba(239,68,68,0.2)]' : 'bg-amber-500/10 text-amber-400 border-amber-500/30'}`}>
+                              {inc.severity}
+                            </span>
+                            <span className="text-[10px] uppercase font-bold tracking-widest text-indigo-300/70">
+                              {formatDistanceToNow(new Date(inc.updated_at), { addSuffix: true })}
+                            </span>
+                          </div>
+                          
+                          <h3 className="text-white font-bold text-sm mb-2 flex items-center pl-3">
+                            <span className="text-slate-400 font-medium mr-2">Target:</span>
+                            <span className="text-cyan-300 font-mono tracking-tight">{inc.entity_id}</span>
+                          </h3>
+                          
+                          <p className="text-slate-300/80 text-xs line-clamp-2 leading-relaxed pl-3 font-medium mb-6">
+                            {inc.reasons?.[0]?.factor || 'Multiple anomalous events detected.'}
+                          </p>
+                        </div>
+                        
+                        <div className="flex items-center justify-between pl-3 pt-4 border-t border-indigo-500/20 mt-auto">
+                          <div>
+                            <span className="text-[9px] uppercase tracking-widest text-red-400/70 font-bold block mb-0.5">Risk Score</span>
+                            <span className="text-red-400 font-mono font-black text-xl drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]">{inc.risk_score}</span>
+                          </div>
+                          <span className="text-cyan-400 font-bold uppercase tracking-widest text-[10px] bg-cyan-950/40 px-4 py-2 rounded-lg border border-cyan-500/30 group-hover:bg-cyan-500/20 transition-colors">
+                            Investigate →
+                          </span>
+                        </div>
+                      </div>
+                    </Link>
+                  ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
