@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/shield-check.svg" width="110" alt="KavachX"/>
+<img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/shield-check.svg" width="110"/>
 
 # KavachX
 
@@ -12,87 +12,118 @@ Built with ❤️ by **Greybox Labs**
 
 ---
 
-### 🚀 Live Deployment
-
-https://kavach-x-omega.vercel.app/
-
-### 💻 Repository
-
-https://github.com/aice18/kavachX
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-KavachX-success?style=for-the-badge)](https://kavach-x-omega.vercel.app/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)]()
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript)]()
+[![Gemini AI](https://img.shields.io/badge/Gemini-AI-8E75B2?style=for-the-badge)]()
+[![Socket.IO](https://img.shields.io/badge/Socket.IO-Realtime-black?style=for-the-badge&logo=socketdotio)]()
+[![Track](https://img.shields.io/badge/FinSpark'26-Problem_Statement_2-blue?style=for-the-badge)]()
 
 ---
 
-<img src="https://img.shields.io/badge/FinSpark'26-Track_2-blue?style=for-the-badge"/>
-<img src="https://img.shields.io/badge/Problem_Statement-AI_Cyber_Correlation-success?style=for-the-badge"/>
-<img src="https://img.shields.io/badge/Status-Prototype-orange?style=for-the-badge"/>
-<img src="https://img.shields.io/badge/Gemini-AI-purple?style=for-the-badge"/>
-<img src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react"/>
-<img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript"/>
-<img src="https://img.shields.io/badge/Socket.IO-black?style=for-the-badge&logo=socketdotio"/>
-<img src="https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwind-css"/>
+### 🌐 Live Deployment
+
+## https://kavach-x-omega.vercel.app/
 
 </div>
 
 ---
 
-# 📌 Overview
+# 🏦 Banks Don't Need More Alerts. They Need More Context.
 
-KavachX is an **AI-powered Cyber Resilience Platform** built specifically for the Banking and Financial Services (BFSI) sector.
+Every second, banks process millions of cybersecurity events and financial transactions.
 
-Modern banks process millions of cybersecurity events and financial transactions every day, but these systems operate independently. Traditional SIEMs generate isolated alerts while banking systems monitor transactions separately, making sophisticated attacks difficult to detect.
+Unfortunately, these systems rarely communicate with one another.
 
-KavachX bridges this gap by intelligently correlating **cybersecurity telemetry** with **transactional behaviour**, enabling banks to identify attacks earlier, reduce false positives, forecast threats, and improve operational resilience.
+A VPN login appears in one dashboard.
+
+A suspicious RTGS transfer appears in another.
+
+A privileged database query appears somewhere else.
+
+Security analysts are left connecting the dots manually.
+
+### **KavachX changes that.**
+
+Instead of treating every event independently, KavachX intelligently correlates cybersecurity telemetry with transactional behaviour, transforming isolated alerts into a single, explainable attack narrative.
+
+The result is faster investigations, fewer false positives, improved fraud detection, and proactive cyber resilience.
 
 ---
 
 # 🎯 Problem Statement
 
-Built for **FinSpark'26 – Track 2**
-
+> **FinSpark'26**
+>
+> **Track 2**
+>
 > **AI-Driven Correlation of Cybersecurity Telemetry & Transactional Behaviour**
 
-### Current Challenges
+---
 
-- Alert fatigue caused by thousands of isolated alerts
-- Slow incident investigation
-- High false positive rates
-- No business impact correlation
-- Reactive security operations
-- Lack of quantum-readiness assessment
+# 📊 Banking Security Today
+
+<img width="1536" height="1024" alt="image" src="https://github.com/user-attachments/assets/b85784bc-7064-4758-b428-61c08b7b16fc" />
+
 
 ---
 
-# 💡 Our Solution
+# ⚡ Enter KavachX
 
-KavachX introduces a unified AI-native command center capable of:
-
-✅ Correlating Cybersecurity + Banking Telemetry
-
-✅ Detecting Fraud in Real Time
-
-✅ Predicting Future Attack Paths
-
-✅ Quantifying Financial Exposure
-
-✅ Explaining AI Decisions
-
-✅ Monitoring Quantum Readiness
+```text
+ Cybersecurity Events
+          │
+          ▼
+ Banking Transactions
+          │
+          ▼
+──────────────────────────
+ AI Correlation Engine
+──────────────────────────
+          │
+          ▼
+ Unified Attack Narrative
+          │
+ ┌────────┼────────┐
+ ▼        ▼        ▼
+AI      Forecast   PQC
+          │
+          ▼
+ SOC Decision Intelligence
+```
 
 ---
 
-# ⭐ Why KavachX?
+# ✨ Why KavachX?
 
-Unlike traditional SIEM platforms that answer:
+Traditional security platforms answer:
 
 > **"What happened?"**
 
 KavachX answers:
 
-- Why did it happen?
-- What is the business impact?
-- What happens next?
-- How should we respond?
-- Which banking assets are affected?
+✅ Why did it happen?
+
+✅ How are these events connected?
+
+✅ Which banking assets are affected?
+
+✅ What will happen next?
+
+✅ What should the SOC team do immediately?
+
+---
+
+# 🆚 Traditional SIEM vs KavachX
+
+| Traditional SIEM | KavachX |
+|------------------|----------|
+| Reactive monitoring | Predictive intelligence |
+| Isolated alerts | Correlated attack stories |
+| Manual investigations | AI-assisted investigations |
+| Generic risk scoring | Banking-aware risk scoring |
+| No financial context | Business impact analysis |
+| No quantum visibility | PQC readiness monitoring |
 
 ---
 
@@ -100,14 +131,13 @@ KavachX answers:
 
 ## 🧠 AI Correlation Engine
 
-Correlates:
+Instead of analyzing logs individually, KavachX correlates
 
-- VPN
-- Firewall
-- Endpoint
-- IAM
-- Database
-- API Gateway
+- VPN Sessions
+- Firewall Events
+- IAM Authentication
+- Endpoint Logs
+- Database Queries
 
 with
 
@@ -118,142 +148,480 @@ with
 - Core Banking
 - Customer Behaviour
 
-to build one unified attack narrative.
+to build a complete attack graph.
 
 ---
 
 ## 🔮 Threat Forecast Engine
 
-Predicts the attacker's next probable move using graph-based deterministic analysis and contextual AI reasoning.
+Predicts the attacker's next probable action before damage occurs.
 
----
+Instead of reacting to incidents...
 
-## 💰 Financial Impact Engine
-
-Calculates:
-
-- Business Risk
-- Blast Radius
-- Estimated Financial Exposure
-- Critical Assets
-
-before damage occurs.
+KavachX predicts them.
 
 ---
 
 ## 🤖 Gemini AI Copilot
 
-Provides explainable AI for:
+The AI assistant provides
 
-- Threat Investigation
+- Incident Summaries
+- Blast Radius Analysis
 - RBI Compliance Guidance
-- Incident Summary
-- Containment Actions
+- Containment Recommendations
 - Executive Reports
+
+using contextual banking intelligence.
 
 ---
 
-## 🔐 Quantum Readiness Engine
+## 💰 Financial Exposure Engine
 
-Continuously scans cryptographic assets for
+Every attack is translated into
+
+- Financial Loss
+- Operational Risk
+- Business Impact
+- Critical Assets
+
+allowing executives to prioritize responses.
+
+---
+
+## 🔐 Quantum Readiness Scanner
+
+Banks rely heavily on cryptography.
+
+KavachX continuously evaluates
 
 - RSA
 - ECC
-- Legacy Algorithms
+- Legacy Encryption
 
-and recommends migration to
+against
 
 - NIST FIPS 203
-- NIST FIPS 204
-- NIST FIPS 205
+- FIPS 204
+- FIPS 205
 
-protecting against **Harvest Now, Decrypt Later** attacks.
+helping organizations prepare for **Harvest Now, Decrypt Later** attacks.
 
 ---
 
-# 🏗️ High-Level Architecture
+# 🏗️ How KavachX Thinks
 
-```text
-Security Events
-       │
-       ▼
-Transaction Events
-       │
-       ▼
-Normalization Layer
-       │
-       ▼
-AI Correlation Engine
-       │
-       ▼
-Threat Forecast Engine
-       │
-       ▼
-Gemini AI Copilot
-       │
-       ▼
-Executive Dashboard
-SOC Console
-PQC Scanner
-What-If Simulator
+```mermaid
+flowchart LR
+
+A[VPN Logs]
+B[Firewall]
+C[Database]
+D[UPI]
+E[RTGS]
+F[ATM]
+
+A --> G
+B --> G
+C --> G
+D --> G
+E --> G
+F --> G
+
+G[AI Correlation Engine]
+
+G --> H[Threat Forecast]
+
+H --> I[Gemini AI]
+
+I --> J[Executive Dashboard]
+
+I --> K[SOC Console]
+
+I --> L[PQC Scanner]
+
+I --> M[Incident Investigator]
 ```
 
 ---
 
-# 🌟 Key Features
+# 📈 Platform Metrics
 
-| Feature | Description |
-|----------|-------------|
-| 🧠 AI Correlation Engine | Cross-correlates cybersecurity telemetry with banking transactions |
-| 📊 Cyber Health Index | Enterprise-wide cyber posture scoring |
-| 🔍 Incident Investigator | Interactive attack timeline & relationship graph |
-| 🤖 Gemini AI Copilot | Explainable AI with contextual recommendations |
-| 🔮 Threat Forecast | Predicts attacker movement before damage |
-| 🌐 Live SOC Console | Streaming event logs & threat visualization |
-| 🧪 What-If Simulator | Graph-based blast radius analysis |
-| 🔐 PQC Scanner | Quantum readiness assessment |
-| 📈 Dynamic Trust Score | Behavioral scoring for users and devices |
-| 🏦 RBI Compliance | Automated compliance intelligence |
+<div align="center">
+
+| ⚡ Event Throughput | ⚙️ Latency | 🤖 AI Engine |
+|:------------------:|:----------:|:------------:|
+| **4.2M+**<br>Events / Hour | **14 ms** | **Gemini AI** |
+
+| 🔐 PQC Monitoring | 🚨 Threat Correlation | 🏦 Banking Context |
+|:----------------:|:--------------------:|:-----------------:|
+| **Enabled** | **Real-Time** | **Native** |
+
+</div>
 
 ---
 
 # 📷 Platform Preview
 
-> *(Replace these placeholders with screenshots)*
+> Replace the placeholders below with screenshots from your application.
 
-- Login Screen
-- Executive Dashboard
-- SOC Console
-- AI Copilot
-- Threat Forecast
-- Incident Timeline
-- What-If Simulator
-- Cryptography Scanner
+| Login | Dashboard |
+|--------|-----------|
+| ![](docs/screenshots/login.png) | ![](docs/screenshots/dashboard.png) |
+
+| SOC Console | AI Copilot |
+|--------------|------------|
+| ![](docs/screenshots/soc.png) | ![](docs/screenshots/copilot.png) |
+
+| Threat Forecast | PQC Scanner |
+|-----------------|-------------|
+| ![](docs/screenshots/forecast.png) | ![](docs/screenshots/pqc.png) |
 
 ---
 
-# 🛠️ Technology Stack
+# ⚙️ Inside KavachX
+
+KavachX is built as a modular, AI-native cybersecurity platform where every incoming event is analyzed, correlated, enriched, and transformed into actionable intelligence within milliseconds.
+
+Instead of flooding analysts with thousands of disconnected alerts, KavachX continuously builds a living attack graph that evolves as new telemetry arrives.
+
+---
+
+# 🏗️ Platform Architecture
+
+```text
+                    External Sources
+ ┌─────────────────────────────────────────────────────┐
+ │                                                     │
+ │  VPN   Firewall   IAM   Endpoint   Database   APIs  │
+ │                                                     │
+ └─────────────────────────┬───────────────────────────┘
+                           │
+                           ▼
+                 Cyber Telemetry Collector
+                           │
+                           │
+          Banking Transaction Collector
+       (UPI • RTGS • NEFT • ATM • CBS Logs)
+                           │
+                           ▼
+              AI Correlation & Risk Engine
+                           │
+      ┌────────────────────┼────────────────────┐
+      ▼                    ▼                    ▼
+ Threat Forecast      Gemini AI          PQC Scanner
+      │                    │                    │
+      └──────────────┬─────┴──────────────┬─────┘
+                     ▼
+          Executive Decision Dashboard
+```
+
+---
+
+# 🧠 AI Decision Pipeline
+
+Every event entering KavachX follows an intelligent processing pipeline.
+
+```mermaid
+flowchart LR
+
+A[Cybersecurity Events]
+B[Transaction Events]
+
+A --> C[Normalization Layer]
+B --> C
+
+C --> D[Correlation Engine]
+
+D --> E[Risk Scoring]
+
+E --> F[Threat Forecast]
+
+F --> G[Gemini AI]
+
+G --> H[SOC Recommendations]
+
+G --> I[Executive Dashboard]
+
+G --> J[RBI Compliance Guidance]
+```
+
+The result is not just another security alert—but a complete explanation of **what happened, why it happened, and what should happen next.**
+
+---
+
+# 🔄 Attack Correlation Flow
+
+Below is the attack simulation demonstrated during the live demo.
+
+```text
+📧 Phishing Email
+        │
+        ▼
+🔑 Credential Theft
+        │
+        ▼
+🌍 Suspicious VPN Login
+        │
+        ▼
+🗄 Database Access
+        │
+        ▼
+💸 High Value RTGS Request
+        │
+        ▼
+🤖 AI Correlation
+        │
+        ▼
+🚨 Critical Incident Created
+        │
+        ▼
+🛡 Containment Recommendations
+```
+
+Instead of creating **five independent alerts**, KavachX correlates every signal into **one unified attack narrative**.
+
+---
+
+# 🧩 Core Platform Modules
+
+## 🛡 Executive Command Center
+
+The Command Center provides CISOs and executives with a real-time overview of organizational cyber health.
+
+Features include:
+
+- Cyber Health Index
+- Enterprise Risk Score
+- Financial Exposure
+- Live Incident Feed
+- Active Threats
+- Compliance Status
+- Business Impact Overview
+
+---
+
+## 💻 SOC Console
+
+Designed for security analysts.
+
+Provides:
+
+- Live Event Streaming
+- Threat Timeline
+- AI Correlation Feed
+- Incident Queue
+- Real-Time Investigation
+- Interactive Attack Graph
+
+---
+
+## 🤖 Gemini AI Copilot
+
+Gemini acts as the organization's cybersecurity assistant.
+
+Example prompts:
+
+> Explain this attack.
+
+> Why is the risk score critical?
+
+> Generate containment steps.
+
+> Which RBI guidelines apply?
+
+> Summarize this incident.
+
+Gemini understands the full incident context before generating recommendations.
+
+---
+
+## 🔮 Threat Forecast Engine
+
+Unlike conventional SIEMs, KavachX predicts attacker movement.
+
+Example
+
+```text
+Current Event
+
+↓
+
+Database Enumeration
+
+↓
+
+Likely Next Step
+
+↓
+
+Credential Dumping
+
+↓
+
+Estimated Time
+
+↓
+
+3 Minutes
+```
+
+This allows SOC teams to respond **before** damage occurs.
+
+---
+
+## 🔐 Post-Quantum Cryptography Scanner
+
+The PQC Scanner continuously evaluates cryptographic assets against emerging quantum threats.
+
+Supported Standards
+
+- NIST FIPS 203
+- NIST FIPS 204
+- NIST FIPS 205
+
+Evaluates
+
+- RSA
+- ECC
+- TLS Certificates
+- Legacy Encryption
+- Critical Banking Assets
+
+Outputs
+
+- Risk Level
+- Migration Priority
+- Estimated Financial Exposure
+
+---
+
+# 🎬 Experience KavachX
+
+The complete platform can be explored in under five minutes.
+
+```text
+Login
+   │
+   ▼
+Executive Dashboard
+   │
+   ▼
+Start Attack Simulation
+   │
+   ▼
+Observe AI Correlation
+   │
+   ▼
+Investigate Incident
+   │
+   ▼
+Consult Gemini AI
+   │
+   ▼
+Run Threat Forecast
+   │
+   ▼
+Evaluate PQC Readiness
+```
+
+---
+
+# 📷 Platform Gallery
+
+> Replace each placeholder with an actual screenshot.
+
+## Executive Command Center
+
+![](docs/screenshots/dashboard.png)
+
+---
+
+## Live SOC Console
+
+![](docs/screenshots/soc.png)
+
+---
+
+## Incident Investigation
+
+![](docs/screenshots/investigator.png)
+
+---
+
+## Gemini AI Copilot
+
+![](docs/screenshots/copilot.png)
+
+---
+
+## Threat Forecast
+
+![](docs/screenshots/forecast.png)
+
+---
+
+## Quantum Readiness Scanner
+
+![](docs/screenshots/pqc.png)
+
+---
+
+# 🛠 Technology Stack
 
 | Layer | Technologies |
 |--------|--------------|
-| **Frontend** | React 19, TypeScript, Tailwind CSS, React Flow, Chart.js |
-| **Backend** | Express.js, Node.js, Socket.IO |
+| **Frontend** | React 19, TypeScript, Tailwind CSS |
+| **Backend** | Node.js, Express.js |
+| **Realtime Engine** | Socket.IO |
 | **Artificial Intelligence** | Google Gemini AI |
-| **Visualization** | React Flow, Live Dashboards, Interactive Graphs |
-| **Authentication** | Session-based Authentication, RBAC |
+| **Visualization** | React Flow, Interactive Graphs |
+| **Charts** | Chart.js |
+| **Authentication** | Session-based RBAC |
 | **Deployment** | Vercel |
 
 ---
 
-# ⚙️ Getting Started
+# 📂 Project Structure
+
+```text
+KavachX
+│
+├── src
+│   ├── components
+│   ├── pages
+│   ├── hooks
+│   ├── services
+│   ├── assets
+│   └── types
+│
+├── server
+│   ├── routes
+│   ├── middleware
+│   ├── controllers
+│   └── services
+│
+├── public
+│
+├── docs
+│   ├── screenshots
+│   ├── diagrams
+│   └── assets
+│
+└── README.md
+```
+
+---
+
+# 🚀 Getting Started
 
 ## Prerequisites
 
 - Node.js 18+
 - npm
-- AI modolues
-- ML Engines
-- Database (Secure)
+- AI Modules
+- ML Engines and models
+- Telemetry Connector
 - Google Gemini API Key
 
 ---
@@ -267,24 +635,24 @@ git clone https://github.com/aice18/kavachX.git
 
 cd kavachX
 
-# Install Dependencies
+# Install dependencies
 
 npm install
 
-# Create Environment File
+# Configure Environment
 
 cp .env.example .env.local
 
-# Add Gemini API Key
+# Add your Gemini API Key
 
 GEMINI_API_KEY=YOUR_API_KEY
 
-# Run Development Server
+# Start Development Server
 
 npm run dev
 ```
 
-Application runs at
+Open
 
 ```
 http://localhost:5069
@@ -292,271 +660,259 @@ http://localhost:5069
 
 ---
 
-# 🚀 Live Deployment
-
-## 🌐 Web Application
-
-https://kavach-x-omega.vercel.app/
-
----
-
-## 💻 GitHub Repository
-
-https://github.com/aice18/kavachX
-
----
-
-# 🔐 Demo Credentials
+# 🔑 Demo Credentials
 
 | Role | Username | Password |
-|--------|------------|-------------|
-| CISO Admin | ADMIN_CISO_01 | kavachx2024 |
-| SOC Analyst | SOC_ANALYST_01 | analyst2024 |
-| Demo | demo | demo |
+|------|----------|----------|
+| 👨‍💼 CISO | ADMIN_CISO_01 | kavachx2024 |
+| 🛡 SOC Analyst | SOC_ANALYST_01 | analyst2024 |
+| 👤 Demo | demo | demo |
 
 ---
 
-# 🎬 Demo Walkthrough
+# 🛡️ Security by Design
 
-### 1️⃣ Login
+KavachX follows a **Zero Trust** architecture and incorporates enterprise-grade security principles across every layer of the platform.
 
-Authenticate using Demo Access or RBAC credentials.
-
-↓
-
-### 2️⃣ Executive Command Center
-
-Monitor
-
-- Cyber Health Index
-- Business Risk
-- Financial Exposure
-- Compliance Status
-
-↓
-
-### 3️⃣ SOC Console
-
-Watch real-time
-
-- Threat Correlation
-- Live Event Stream
-- Threat Origin Map
-- Incident Timeline
-
-↓
-
-### 4️⃣ AI Copilot
-
-Ask questions like
-
-- What happened?
-- Which systems are affected?
-- What should I do next?
-- Show RBI compliance requirements.
-
-↓
-
-### 5️⃣ What-If Simulator
-
-Simulate compromise of banking assets and calculate blast radius using graph traversal.
-
-↓
-
-### 6️⃣ Threat Forecast
-
-Predict attacker movement before damage occurs.
-
-↓
-
-### 7️⃣ Cryptography Scanner
-
-Evaluate
-
-- PQC Readiness
-- Vulnerable Systems
-- Harvest Now Decrypt Later Exposure
+Rather than relying on perimeter defenses, every request, user, device, and event is continuously validated before access is granted or actions are recommended.
 
 ---
 
-# 🔒 Security Architecture
+## 🔐 Security Layers
 
-KavachX follows a **Zero Trust** approach and enterprise security best practices.
-
-### Security Features
-
-- ✅ Zero Trust Architecture
-- ✅ Role-Based Access Control
-- ✅ Session Authentication
-- ✅ Secure API Communication
-- ✅ Audit Logging
-- ✅ Explainable AI
-- ✅ Secure Event Streaming
-- ✅ Quantum Readiness Assessment
+```text
+                    🌐 Internet
+                         │
+                         ▼
+                 HTTPS / TLS Encryption
+                         │
+                         ▼
+              Authentication & RBAC
+                         │
+                         ▼
+            Session Validation & Access Control
+                         │
+                         ▼
+             AI Correlation & Risk Analysis
+                         │
+                         ▼
+             Secure Banking Intelligence Layer
+```
 
 ---
 
-# 📊 Business Impact
+## Security Features
 
-KavachX helps financial institutions by
+| Feature | Description |
+|----------|-------------|
+| 🔒 Zero Trust Architecture | Every request is verified before processing |
+| 👥 Role-Based Access Control | Separate dashboards for CISO and SOC teams |
+| 🛡 Secure Authentication | Session-protected routes and APIs |
+| 📋 Audit Logging | Complete activity tracking |
+| 🤖 Explainable AI | Every AI recommendation includes reasoning |
+| 🔐 PQC Readiness | Continuous cryptographic posture assessment |
+| 🌐 Secure APIs | Encrypted communication across services |
 
-- 🚀 Detecting threats earlier
-- 💰 Reducing financial losses
-- 📉 Reducing false positives
-- ⚡ Accelerating SOC investigations
-- 🏦 Improving RBI compliance
-- 🔮 Preparing banks for Quantum Computing risks
+---
+
+# 🏛 Regulatory Compliance
+
+KavachX is designed around regulatory expectations for the banking sector.
+
+| Framework | Purpose |
+|-----------|----------|
+| RBI Cyber Security Framework | Incident monitoring & reporting |
+| NPCI Guidelines | Secure payment transaction monitoring |
+| PCI DSS v4.0 | Protection of payment card information |
+| ISO/IEC 27001 | Information Security Management |
+| IT Act Section 43A | Reasonable security practices |
+| NIST FIPS 203 | ML-KEM (Post-Quantum Encryption) |
+| NIST FIPS 204 | ML-DSA (Post-Quantum Signatures) |
+| NIST FIPS 205 | Stateless Hash-Based Signatures |
+
+---
+
+# 📈 Business Impact
+
+KavachX isn't just a cybersecurity dashboard—it is a decision intelligence platform designed to improve both security operations and business resilience.
+
+```text
+Cyber Events
+      │
+      ▼
+AI Correlation
+      │
+      ▼
+Threat Prediction
+      │
+      ▼
+Faster Decisions
+      │
+      ▼
+Reduced Financial Loss
+      │
+      ▼
+Business Continuity
+```
+
+---
+
+## Benefits for Financial Institutions
+
+✅ Faster incident response
+
+✅ Reduced false positives
+
+✅ Improved fraud detection
+
+✅ Executive-level visibility
+
+✅ AI-assisted investigations
+
+✅ Regulatory compliance support
+
+✅ Quantum-ready infrastructure
+
+---
+
+# 📊 Platform Advantages
+
+<div align="center">
+
+| Capability | Traditional SIEM | 🛡️ KavachX |
+|:-----------|:----------------:|:----------:|
+| 🔗 Event Correlation | Partial | ✅ AI-Driven |
+| 🏦 Banking Context | ❌ Generic | ✅ Native BFSI |
+| 🔮 Threat Forecasting | ❌ Reactive | ✅ Predictive AI |
+| 🤖 Explainable Intelligence | ❌ No | ✅ Gemini AI |
+| 💰 Financial Impact Analysis | ❌ Not Available | ✅ Built-in |
+| 🔐 PQC Assessment | ❌ No | ✅ Continuous Monitoring |
+| 📊 Executive Dashboard | ⚠️ Limited | ✅ Real-Time Insights |
+
+</div>
 
 ---
 
 # 📈 Scalability
 
-KavachX is designed for enterprise deployment.
+KavachX is designed with enterprise adoption in mind.
+
+```text
+Single Branch
+      │
+      ▼
+Regional Office
+      │
+      ▼
+Multi-State Deployment
+      │
+      ▼
+National Banking Network
+      │
+      ▼
+Multi-Bank Ecosystem
+```
 
 Supports
 
-- Multiple Branches
-- Multiple Data Centers
-- Cloud Deployment
-- Millions of Daily Events
-- Horizontal Scaling
-- API-first Integration
-- Real-time Streaming
+- Multiple banking branches
+- Distributed deployments
+- Horizontal scaling
+- Real-time event streaming
+- API-first integrations
+- High-volume telemetry ingestion
 
 ---
 
-# 🗺️ Adoption Roadmap
+# 🚀 Deployment
 
-## Phase 1
+### 🌐 Live Demo
 
-✅ Pilot Deployment
-
-Deploy within a controlled banking environment.
+https://kavach-x-omega.vercel.app/
 
 ---
 
-## Phase 2
+### 💻 GitHub Repository
 
-✅ SOC Integration
-
-Integrate with existing SOC workflows.
+https://github.com/aice18/kavachX
 
 ---
 
-## Phase 3
+# 🗺️ Product Roadmap
 
-⬜ Core Banking Integration
+```mermaid
+timeline
+    title KavachX Roadmap
 
-Connect
+    Phase 1 : MVP Development
+            : AI Correlation Engine
+            : Executive Dashboard
 
-- Core Banking
-- UPI
-- RTGS
-- API Gateway
+    Phase 2 : SOC Console
+            : Gemini AI Copilot
+            : Threat Forecasting
 
----
+    Phase 3 : PQC Scanner
+            : Compliance Automation
+            : Enterprise Scaling
 
-## Phase 4
-
-⬜ Enterprise Rollout
-
-Deploy across nationwide banking infrastructure.
-
----
-
-# 📜 Regulatory Compliance
-
-KavachX aligns with
-
-- RBI Cybersecurity Framework
-- NPCI Guidelines
-- PCI DSS v4.0
-- ISO 27001
-- IT Act Section 43A
-- NIST FIPS 203
-- NIST FIPS 204
-- NIST FIPS 205
-
----
-
-# 📂 Repository Structure
-
-```
-src/
-├── components/
-├── pages/
-├── services/
-├── hooks/
-├── types/
-├── assets/
-
-server/
-├── api/
-├── routes/
-├── middleware/
-
-public/
-
-docs/
+    Phase 4 : Multi-Bank Intelligence
+            : Autonomous AI Agents
+            : Nationwide Deployment
 ```
 
 ---
 
-# 🏆 Why KavachX?
+# 🔮 Future Vision
 
-| Traditional SIEM | KavachX |
-|------------------|----------|
-| Reactive Alerts | Predictive Intelligence |
-| Thousands of Alerts | Correlated Incidents |
-| Manual Investigation | AI-Assisted Investigation |
-| No Business Context | Banking Context |
-| High False Positives | Context-Aware Correlation |
-| No Quantum Visibility | PQC Readiness Engine |
+Our long-term vision is to transform KavachX into a fully autonomous cyber resilience platform capable of assisting financial institutions across India.
 
----
+Future capabilities include:
 
-# 🔮 Future Scope
-
-- AI Agents for Autonomous SOC
-- Multi-bank Threat Intelligence Sharing
-- RBI Automated Compliance Reporting
-- Quantum-safe Migration Assistant
-- Insider Threat Detection
-- Fraud Risk Forecasting
-- Mobile Executive Dashboard
-- Cloud-native Microservices
+- 🤖 Multi-Agent SOC
+- 🧠 Autonomous Threat Hunting
+- 🌍 Cross-Bank Threat Intelligence
+- 📄 Automated RBI Reporting
+- 📱 Executive Mobile Dashboard
+- ☁️ Cloud-Native Microservices
+- 🛰️ Threat Intelligence Feeds
+- 🔐 Quantum-Safe Migration Assistant
 
 ---
 
 # 👥 Team Greybox Labs
 
-### Ayush Kumar Choudhary
+<table>
+<tr>
 
-**Team Lead • Backend • AI • Cybersecurity Engineering**
+<td align="center" width="50%">
 
-- AI Systems
-- Threat Correlation
-- Backend Architecture
-- Security Engineering
+## 👨‍💻 Ayush Kumar Choudhary
 
----
+**Team Lead • AI & Backend Engineering**
 
-### Jyotsna G
+Threat Intelligence • System Architecture • AI Integration • Cybersecurity
 
-**Frontend • System Architecture • Testing**
+</td>
 
-- UI/UX
-- Dashboard Development
-- Visualization
-- Quality Assurance
+<td align="center" width="50%">
+
+## 👩‍💻 Jyotsna G
+
+**Frontend Engineer**
+
+User Experience • Dashboard Design • Visualization • Testing
+
+</td>
+
+</tr>
+</table>
 
 ---
 
 # 🤝 Contributing
 
-Contributions are welcome.
-
-If you'd like to improve KavachX,
+Contributions, suggestions, and improvements are always welcome.
 
 1. Fork the repository
 2. Create a feature branch
@@ -565,40 +921,53 @@ If you'd like to improve KavachX,
 
 ---
 
-# 📄 License
+# 📜 License
 
-This project was developed as part of
+Developed as part of **FinSpark'26 — AI-Driven Correlation of Cybersecurity Telemetry & Transactional Behaviour**.
 
-**FinSpark'26 — AI-Powered Cybersecurity & Banking Resilience Hackathon**
+This repository is intended for educational, research, and hackathon demonstration purposes.
 
-For academic and demonstration purposes.
+---
+
+# 🙏 Acknowledgements
+
+Special thanks to:
+
+- **FinSpark'26** for providing a real-world cybersecurity challenge.
+- **Bank of Maharashtra**
+- **Indian Banks' Association (IBA)**
+- **Department of Financial Services**
+- **COEP Technological University**
+- **Google Gemini AI** for powering intelligent decision support.
 
 ---
 
 <div align="center">
 
-## 🛡️ KavachX
+<img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/shield-check.svg" width="90"/>
+
+# KavachX
 
 ### AI-Native Cyber Resilience Command Center
 
-**Predict • Prioritize • Protect**
-
-Built by **Greybox Labs**
+### Predict • Prioritize • Protect
 
 ---
 
-### 🌐 Live Demo
+🌐 **Live Demo**
 
 https://kavach-x-omega.vercel.app/
 
-### ⭐ GitHub
+⭐ **GitHub Repository**
 
 https://github.com/aice18/kavachX
 
 ---
 
-*"Modern banks don't just need alerts. They need intelligence."*
+> *"Cybersecurity isn't about collecting more alerts—it's about delivering the right intelligence at the right moment."*
 
-If you found this project interesting, consider giving it a ⭐.
+### Built with ❤️ by **Greybox Labs**
+
+**FinSpark'26 • Banking Cybersecurity Innovation**
 
 </div>
