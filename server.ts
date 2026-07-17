@@ -10,14 +10,14 @@ import { wsHandler } from './server/routes/ws.js';
 
 async function startServer() {
   const app = express();
-  const PORT = process.env.PORT || 4554;
+  const PORT = process.env.PORT || 5005;
   
   app.use(express.json());
 
   const httpServer = createHttpServer(app);
   const allowedOrigins = process.env.APP_URL
-    ? [process.env.APP_URL, 'http://localhost:4554']
-    : ['http://localhost:4554', 'http://127.0.0.1:4554'];
+    ? [process.env.APP_URL, 'http://localhost:5005']
+    : ['http://localhost:5005', 'http://127.0.0.1:5005'];
 
   const io = new SocketIOServer(httpServer, {
     cors: {
