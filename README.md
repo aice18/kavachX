@@ -257,26 +257,7 @@ I --> M[Incident Investigator]
 |:----------------:|:--------------------:|:-----------------:|
 | **Enabled** | **Real-Time** | **Native** |
 
-</div>
-
----
-
-# 📷 Platform Preview
-
-> Replace the placeholders below with screenshots from your application.
-
-| Login | Dashboard |
-|--------|-----------|
-| ![](docs/screenshots/login.png) | ![](docs/screenshots/dashboard.png) |
-
-| SOC Console | AI Copilot |
-|--------------|------------|
-| ![](docs/screenshots/soc.png) | ![](docs/screenshots/copilot.png) |
-
-| Threat Forecast | PQC Scanner |
-|-----------------|-------------|
-| ![](docs/screenshots/forecast.png) | ![](docs/screenshots/pqc.png) |
-
+</div> 
 ---
 
 # ⚙️ Inside KavachX
