@@ -1,8 +1,7 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/shield-check.svg" width="110"/>
+<img width="197" height="60" alt="image" src="https://github.com/user-attachments/assets/9464a8d1-d63d-4797-888d-f6639f924676" />
 
-# KavachX
 
 ### AI-Native Cyber Resilience Command Center for Modern Banking
 
