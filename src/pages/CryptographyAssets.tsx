@@ -130,8 +130,10 @@ export default function CryptographyAssets() {
             <Lock className="w-5 h-5 text-slate-500" />
             {t('crypto.inventory', 'Active Cryptographic Inventory')}
           </h3>
-          <button className="text-sm font-medium text-blue-600 hover:text-blue-700 bg-blue-50 px-4 py-2 rounded-lg transition-colors">
-            {t('crypto.run_scan', 'Run Full Scan')}
+          <button 
+            title="Scans all active cryptographic assets for Post-Quantum Cryptography vulnerabilities and readiness."
+            className="text-sm font-medium text-blue-600 hover:text-blue-700 bg-blue-50 px-4 py-2 rounded-lg transition-colors cursor-help">
+            {t('crypto.run_scan', 'PQC Scan')}
           </button>
         </div>
         <div className="overflow-x-auto">

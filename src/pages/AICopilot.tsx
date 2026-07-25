@@ -12,7 +12,18 @@ export default function AICopilot() {
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
+  const [isSimulating, setIsSimulating] = useState(false);
+  const [simulationComplete, setSimulationComplete] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const runSimulation = () => {
+    setIsSimulating(true);
+    setSimulationComplete(false);
+    setTimeout(() => {
+      setIsSimulating(false);
+      setSimulationComplete(true);
+    }, 2500);
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -162,9 +173,25 @@ export default function AICopilot() {
            </h3>
          </div>
          <div className="p-6 space-y-8 flex-1 overflow-y-auto relative z-10">
-            
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-               <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">{t('copilot.target_asset', 'Target Asset')}: <span className="text-slate-700">ATM_143</span></div>
+            {!simulationComplete && !isSimulating && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-slate-400 p-6 text-center">
+                <TerminalSquare className="w-12 h-12 mb-3 opacity-20" />
+                <p className="font-medium text-sm">{t('whatif.configure', 'Configure parameters and run a scenario to see projected impact.')}</p>
+              </div>
+            )}
+
+            {isSimulating && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/80 backdrop-blur-sm z-20">
+                <div className="w-10 h-10 mb-4 border-4 border-blue-100 border-t-blue-600 rounded-full animate-spin"></div>
+                <p className="text-xs font-bold text-slate-900 tracking-wider uppercase animate-pulse">{t('whatif.running_twin', 'Running Digital Twin Simulation')}</p>
+              </div>
+            )}
+
+            <AnimatePresence>
+            {simulationComplete && (
+              <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="space-y-8">
+               <div>
+                 <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">{t('copilot.target_asset', 'Target Asset')}: <span className="text-slate-700">ATM_143</span></div>
                <div className="bg-red-50 p-5 rounded-xl border border-red-100 shadow-inner">
                   <div className="flex justify-between items-center mb-2">
                      <span className="text-xs font-semibold text-red-800">{t('copilot.projected_loss', 'Projected Loss Exposure')}</span>
@@ -202,13 +229,24 @@ export default function AICopilot() {
                   </div>
                </div>
             </motion.div>
+            </div>
+            </motion.div>
+            )}
+            </AnimatePresence>
 
          </div>
          <div className="p-4 bg-slate-50/50 border-t border-slate-100 shrink-0">
-            <button onClick={() => navigate('/what-if')} className="w-full bg-slate-900 text-white py-3.5 rounded-xl text-sm font-medium hover:bg-slate-800 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 flex items-center justify-center gap-2 group/btn">
-               {t('copilot.run_sim_btn', 'Run Simulation')}
-               <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-            </button>
+            {!simulationComplete ? (
+              <button onClick={runSimulation} disabled={isSimulating} className="w-full bg-slate-900 text-white py-3.5 rounded-xl text-sm font-medium hover:bg-slate-800 transition-all shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2 flex items-center justify-center gap-2 group/btn disabled:opacity-50">
+                 {isSimulating ? t('whatif.simulating', 'Simulating Impact...') : t('copilot.run_sim_btn', 'Run Simulation')}
+                 {!isSimulating && <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />}
+              </button>
+            ) : (
+              <button onClick={() => navigate('/what-if')} className="w-full bg-blue-600 text-white py-3.5 rounded-xl text-sm font-medium hover:bg-blue-700 transition-all shadow-md hover:shadow-lg focus:outline-none flex items-center justify-center gap-2 group/btn">
+                 View Full Report
+                 <ChevronRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+              </button>
+            )}
          </div>
       </motion.div>
 
