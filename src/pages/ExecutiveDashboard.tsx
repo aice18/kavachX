@@ -24,7 +24,7 @@ const AnimatedNumber = ({ value, formatter }: { value: number, formatter?: (v: n
 };
 
 export default function ExecutiveDashboard() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [data, setData] = useState<any>(null);
   const [isExporting, setIsExporting] = useState(false);
   const dashboardRef = useRef<HTMLDivElement>(null);

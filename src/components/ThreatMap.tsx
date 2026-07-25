@@ -59,7 +59,7 @@ const ringsData = arcsData.map(arc => ({
 
 export default function ThreatMap() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const globeEl = useRef<any>();
+  const globeEl = useRef<any>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
   const { t } = useTranslation();
 
