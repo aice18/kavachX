@@ -19,7 +19,7 @@ export default function SOCDashboard() {
     setAnalyzing(true);
     setAiAnalysis(null);
     try {
-      const res = await fetch('/api/ml/score', {
+      const res = await fetch(`${import.meta.env.PROD ? 'https://kavachx-6wm9.onrender.com' : ''}/api/ml/score`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ alertData: incident })
@@ -35,7 +35,7 @@ export default function SOCDashboard() {
 
   useEffect(() => {
     const fetchData = () => {
-      fetch('/api/metrics/soc')
+      fetch(`${import.meta.env.PROD ? 'https://kavachx-6wm9.onrender.com' : ''}/api/metrics/soc`)
         .then(res => res.json())
         .then(setData)
         .catch(err => console.error("Error fetching SOC data:", err));

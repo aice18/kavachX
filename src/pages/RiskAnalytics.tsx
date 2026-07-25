@@ -11,7 +11,7 @@ export default function RiskAnalytics() {
   const runSequenceAnalysis = async () => {
     setAnalyzingSeq(true);
     try {
-      const res = await fetch('/api/ml/sequence', {
+      const res = await fetch(`${import.meta.env.PROD ? 'https://kavachx-6wm9.onrender.com' : ''}/api/ml/sequence`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ actionTimeline: ["VPN Login from new IP", "Accessed CORE_DB", "High data transfer to unknown IP"] })

@@ -19,7 +19,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/auth/verify')
+    fetch(`${import.meta.env.PROD ? 'https://kavachx-6wm9.onrender.com' : ''}/api/auth/verify`)
       .then(res => res.json())
       .then(data => {
         if (data.authenticated) {
@@ -34,7 +34,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const logout = () => {
-    fetch('/api/auth/logout', { method: 'POST' }).then(() => {
+    fetch(`${import.meta.env.PROD ? 'https://kavachx-6wm9.onrender.com' : ''}/api/auth/logout`, { method: 'POST' }).then(() => {
       setUser(null);
     });
   };

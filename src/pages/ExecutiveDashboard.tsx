@@ -30,7 +30,7 @@ export default function ExecutiveDashboard() {
   const dashboardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch('/api/metrics/executive')
+    fetch(`${import.meta.env.PROD ? 'https://kavachx-6wm9.onrender.com' : ''}/api/metrics/executive`)
       .then(res => res.json())
       .then(setData);
   }, []);

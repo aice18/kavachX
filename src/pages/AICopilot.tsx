@@ -38,7 +38,7 @@ export default function AICopilot() {
     const languageContext = i18n.language === 'hi' ? 'कृपया हिंदी में उत्तर दें (Reply in Hindi)' : i18n.language === 'mr' ? 'कृपया मराठीत उत्तर द्या (Reply in Marathi)' : '';
     
     try {
-      const response = await fetch('/api/copilot/chat', {
+      const response = await fetch(`${import.meta.env.PROD ? 'https://kavachx-6wm9.onrender.com' : ''}/api/copilot/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

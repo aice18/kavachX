@@ -15,7 +15,7 @@ export default function WhatIfSimulator() {
     setAnalyzingAnomaly(true);
     setAnomalyData(null);
     try {
-      const res = await fetch('/api/ml/anomaly', {
+      const res = await fetch(`${import.meta.env.PROD ? 'https://kavachx-6wm9.onrender.com' : ''}/api/ml/anomaly`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ telemetryData: { loginAttempts: 500, timeWindow: "10mins", sourceRegion: "Unknown" } })
