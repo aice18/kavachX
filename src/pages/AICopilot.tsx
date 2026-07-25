@@ -197,47 +197,47 @@ export default function AICopilot() {
             <AnimatePresence>
             {simulationComplete && (
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="space-y-8">
-               <div>
+               
+               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">{t('copilot.target_asset', 'Target Asset')}: <span className="text-slate-700">ATM_143</span></div>
-               <div className="bg-red-50 p-5 rounded-xl border border-red-100 shadow-inner">
-                  <div className="flex justify-between items-center mb-2">
-                     <span className="text-xs font-semibold text-red-800">{t('copilot.projected_loss', 'Projected Loss Exposure')}</span>
-                     <span className="text-[10px] font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded-md border border-red-200 shadow-sm">{t('copilot.critical', 'CRITICAL')}</span>
-                  </div>
-                  <div className="text-3xl font-bold text-red-700 tracking-tight">₹5,25,02,126</div>
-               </div>
-            </motion.div>
+                 <div className="bg-red-50 p-5 rounded-xl border border-red-100 shadow-inner">
+                    <div className="flex justify-between items-center mb-2">
+                       <span className="text-xs font-semibold text-red-800">{t('copilot.projected_loss', 'Projected Loss Exposure')}</span>
+                       <span className="text-[10px] font-bold text-red-700 bg-red-100 px-2 py-0.5 rounded-md border border-red-200 shadow-sm">{t('copilot.critical', 'CRITICAL')}</span>
+                    </div>
+                    <div className="text-3xl font-bold text-red-700 tracking-tight">₹5,25,02,126</div>
+                 </div>
+               </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="grid grid-cols-2 gap-4">
-               <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                  <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">{t('copilot.blast_radius', 'Blast Radius')}</div>
-                  <div className="text-xl font-bold text-slate-900">12,500 <span className="text-sm font-medium text-slate-400">{t('copilot.users', 'users')}</span></div>
-               </div>
-               <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-                  <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">{t('copilot.est_recovery', 'Est. Recovery')}</div>
-                  <div className="text-xl font-bold text-slate-900">12 <span className="text-sm font-medium text-slate-400">{t('copilot.hrs', 'hrs')}</span></div>
-               </div>
-            </motion.div>
+               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }} className="grid grid-cols-2 gap-4">
+                  <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                     <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">{t('copilot.blast_radius', 'Blast Radius')}</div>
+                     <div className="text-xl font-bold text-slate-900">12,500 <span className="text-sm font-medium text-slate-400">{t('copilot.users', 'users')}</span></div>
+                  </div>
+                  <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                     <div className="text-xs font-medium text-slate-500 mb-1 uppercase tracking-wide">{t('copilot.est_recovery', 'Est. Recovery')}</div>
+                     <div className="text-xl font-bold text-slate-900">12 <span className="text-sm font-medium text-slate-400">{t('copilot.hrs', 'hrs')}</span></div>
+                  </div>
+               </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
-               <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">{t('copilot.recommended_actions', 'Recommended Actions')}</div>
-               <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3.5 bg-blue-50 border border-blue-200 rounded-xl text-sm shadow-sm group-hover:border-blue-300 transition-colors">
-                     <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0" />
-                     <span className="font-semibold text-blue-900">{t('copilot.isolate', 'Isolate VLAN 40')}</span>
+               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}>
+                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3">{t('copilot.recommended_actions', 'Recommended Actions')}</div>
+                  <div className="space-y-3">
+                     <div className="flex items-center gap-3 p-3.5 bg-blue-50 border border-blue-200 rounded-xl text-sm shadow-sm group-hover:border-blue-300 transition-colors">
+                        <CheckCircle2 className="w-5 h-5 text-blue-600 shrink-0" />
+                        <span className="font-semibold text-blue-900">{t('copilot.isolate', 'Isolate VLAN 40')}</span>
+                     </div>
+                     <div className="flex items-center gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600">
+                        <div className="w-5 h-5 rounded-full border-2 border-slate-300 shrink-0"></div>
+                        <span className="font-medium text-slate-700">{t('copilot.failover', 'Initiate failover to DR-Site-B')}</span>
+                     </div>
+                     <div className="flex items-center gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600">
+                        <div className="w-5 h-5 rounded-full border-2 border-slate-300 shrink-0"></div>
+                        <span className="font-medium text-slate-700">{t('copilot.suspend_routing', 'Suspend internal routing')}</span>
+                     </div>
                   </div>
-                  <div className="flex items-center gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600">
-                     <div className="w-5 h-5 rounded-full border-2 border-slate-300 shrink-0"></div>
-                     <span className="font-medium text-slate-700">{t('copilot.failover', 'Initiate failover to DR-Site-B')}</span>
-                  </div>
-                  <div className="flex items-center gap-3 p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-600">
-                     <div className="w-5 h-5 rounded-full border-2 border-slate-300 shrink-0"></div>
-                     <span className="font-medium text-slate-700">{t('copilot.suspend_routing', 'Suspend internal routing')}</span>
-                  </div>
-               </div>
-            </motion.div>
-            </div>
-            </motion.div>
+               </motion.div>
+              </motion.div>
             )}
             </AnimatePresence>
 
