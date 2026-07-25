@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, PieChart, Pie, Cell } from 'recharts';
 import { Activity, ShieldAlert, AlertTriangle, PlayCircle, TrendingUp, ShieldCheck, Download, ArrowUpRight, ArrowDownRight } from 'lucide-react';
-import { motion, animate } from 'motion/react';
+import { motion, animate, Variants } from 'motion/react';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { useTranslation } from 'react-i18next';
@@ -41,62 +41,62 @@ export default function ExecutiveDashboard() {
     setTimeout(() => {
       try {
         const pdf = new jsPDF('p', 'mm', 'a4');
-        const date = new Date().toLocaleDateString();
+        const date = new Date().toLocaleDateString(i18n.language);
         
         // Header
         pdf.setFillColor(15, 23, 42); // slate-900
         pdf.rect(0, 0, 210, 40, 'F');
         pdf.setTextColor(255, 255, 255);
         pdf.setFontSize(22);
-        pdf.text('KavachX Cybersecurity Assessment', 15, 20);
+        pdf.text(t('report.title', 'KavachX Cybersecurity Assessment'), 15, 20);
         pdf.setFontSize(12);
-        pdf.text(`Executive Summary Report - ${date}`, 15, 30);
+        pdf.text(`${t('report.subtitle', 'Executive Summary Report')} - ${date}`, 15, 30);
 
         // Current Status
         pdf.setTextColor(15, 23, 42);
         pdf.setFontSize(16);
-        pdf.text('1. Current Risk Posture & Status', 15, 55);
+        pdf.text(t('report.section1', '1. Current Risk Posture & Status'), 15, 55);
         
         pdf.setFontSize(11);
         pdf.setTextColor(71, 85, 105); // slate-600
-        pdf.text(`Cyber Health Index: ${data.healthIndex} / 100 (Requires Attention)`, 15, 65);
-        pdf.text(`Value at Risk: INR ${(data.valueAtRisk / 100000).toFixed(2)} Lakhs`, 15, 72);
-        pdf.text(`Compliance Stance: ${data.complianceStance}`, 15, 79);
+        pdf.text(t('report.chi', { score: data.healthIndex, defaultValue: `Cyber Health Index: ${data.healthIndex} / 100 (Requires Attention)` }), 15, 65);
+        pdf.text(t('report.var', { amount: (data.valueAtRisk / 100000).toFixed(2), defaultValue: `Value at Risk: INR ${(data.valueAtRisk / 100000).toFixed(2)} Lakhs` }), 15, 72);
+        pdf.text(t('report.compliance', { stance: data.complianceStance, defaultValue: `Compliance Stance: ${data.complianceStance}` }), 15, 79);
         
         // Observations
         pdf.setTextColor(15, 23, 42);
         pdf.setFontSize(14);
-        pdf.text('Key Observations:', 15, 95);
+        pdf.text(t('report.obs_title', 'Key Observations:'), 15, 95);
         pdf.setFontSize(10);
         pdf.setTextColor(71, 85, 105);
-        pdf.text('- Elevated network scanning activity detected in the past 24 hours.', 15, 105);
-        pdf.text('- Critical exposure linked to unpatched legacy systems in segment VLAN-40.', 15, 112);
-        pdf.text('- Multi-factor authentication gaps identified in 12% of administrative accounts.', 15, 119);
-        pdf.text(`- False Positives Reduction at ${data.falsePositivesReduction} indicating optimized alerting.`, 15, 126);
+        pdf.text(t('report.obs1', '- Elevated network scanning activity detected in the past 24 hours.'), 15, 105);
+        pdf.text(t('report.obs2', '- Critical exposure linked to unpatched legacy systems in segment VLAN-40.'), 15, 112);
+        pdf.text(t('report.obs3', '- Multi-factor authentication gaps identified in 12% of administrative accounts.'), 15, 119);
+        pdf.text(t('report.obs4', { rate: data.falsePositivesReduction, defaultValue: `- False Positives Reduction at ${data.falsePositivesReduction} indicating optimized alerting.` }), 15, 126);
 
         // Suggested Actions
         pdf.setTextColor(15, 23, 42);
         pdf.setFontSize(16);
-        pdf.text('2. Strategic Recommendations & Actions', 15, 145);
+        pdf.text(t('report.section2', '2. Strategic Recommendations & Actions'), 15, 145);
         
         pdf.setFontSize(11);
         pdf.setTextColor(185, 28, 28); // red-700
-        pdf.text('[Immediate Priority]', 15, 155);
+        pdf.text(t('report.immediate', '[Immediate Priority]'), 15, 155);
         pdf.setTextColor(71, 85, 105);
-        pdf.text('1. Isolate VLAN-40 from the core banking database cluster.', 15, 162);
-        pdf.text('2. Enforce FIDO2-based MFA for all remaining administrative accounts.', 15, 169);
+        pdf.text(t('report.rec1', '1. Isolate VLAN-40 from the core banking database cluster.'), 15, 162);
+        pdf.text(t('report.rec2', '2. Enforce FIDO2-based MFA for all remaining administrative accounts.'), 15, 169);
         
         pdf.setTextColor(217, 119, 6); // amber-600
-        pdf.text('[Medium Term]', 15, 185);
+        pdf.text(t('report.medium', '[Medium Term]'), 15, 185);
         pdf.setTextColor(71, 85, 105);
-        pdf.text('3. Initiate post-quantum cryptography readiness assessment for TLS endpoints.', 15, 192);
-        pdf.text('4. Review automated SLA reporting to ensure continuous regulatory alignment.', 15, 199);
+        pdf.text(t('report.rec3', '3. Initiate post-quantum cryptography readiness assessment for TLS endpoints.'), 15, 192);
+        pdf.text(t('report.rec4', '4. Review automated SLA reporting to ensure continuous regulatory alignment.'), 15, 199);
 
         // Footer
         pdf.setFontSize(9);
         pdf.setTextColor(148, 163, 184); // slate-400
-        pdf.text('Generated autonomously by KavachX AI', 15, 285);
-        pdf.text('Confidential - For Executive Review Only', 135, 285);
+        pdf.text(t('report.footer_left', 'Generated autonomously by KavachX AI'), 15, 285);
+        pdf.text(t('report.footer_right', 'Confidential - For Executive Review Only'), 135, 285);
 
         pdf.save(`KavachX_Report_${Date.now()}.pdf`);
       } catch (error) {
@@ -114,7 +114,7 @@ export default function ExecutiveDashboard() {
     </div>
   );
 
-  const container = {
+  const container: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -124,7 +124,7 @@ export default function ExecutiveDashboard() {
     }
   };
 
-  const item = {
+  const item: Variants = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
   };

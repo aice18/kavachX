@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ShieldAlert, Search, Server, Database, Network, ArrowRight, BarChart3, Activity, PieChart as PieChartIcon, Filter, Clock, CheckCircle2, Lock, Pause, ShieldBan, X, Play } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, Variants } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, PieChart, Pie } from 'recharts';
 import ThreatMap from '../components/ThreatMap';
@@ -57,7 +57,7 @@ export default function SOCDashboard() {
     </div>
   );
 
-  const container = {
+  const container: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
@@ -65,7 +65,7 @@ export default function SOCDashboard() {
     }
   };
 
-  const item = {
+  const item: Variants = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
   };
