@@ -37,6 +37,7 @@
     "react-dom": "^19.0.1",
     "react-globe.gl": "^2.38.0",
     "react-i18next": "^17.0.11",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.18.1",
     "recharts": "^2.12.7",
     "tailwind-merge": "^3.6.0",
