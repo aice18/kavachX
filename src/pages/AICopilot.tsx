@@ -3,6 +3,7 @@ import { Bot, Send, User, Sparkles, TerminalSquare, CheckCircle2, ChevronRight }
 import { motion, AnimatePresence } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import ReactMarkdown from 'react-markdown';
 
 export default function AICopilot() {
   const { t, i18n } = useTranslation();
@@ -113,7 +114,13 @@ export default function AICopilot() {
                     ? 'bg-white border border-slate-200 text-slate-700 rounded-tl-none' 
                     : 'bg-slate-900 text-white rounded-tr-none'
                 }`}>
-                  <p className="leading-relaxed">{msg.content}</p>
+                  {msg.role === 'ai' ? (
+                    <div className="prose prose-sm prose-slate max-w-none prose-p:leading-relaxed prose-pre:bg-slate-800 prose-pre:text-slate-100">
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    </div>
+                  ) : (
+                    <p className="leading-relaxed">{msg.content}</p>
+                  )}
                 </div>
               </motion.div>
             ))}
