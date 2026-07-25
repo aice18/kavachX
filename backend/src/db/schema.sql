@@ -56,3 +56,31 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     ip_address INET,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+-- Simulator Tables
+CREATE TABLE IF NOT EXISTS devices (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id),
+    device_name VARCHAR(255),
+    ip_address INET,
+    is_trusted BOOLEAN DEFAULT true,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS bank_accounts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id),
+    account_number VARCHAR(50) UNIQUE NOT NULL,
+    balance DECIMAL(15, 2) DEFAULT 0.00,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS transactions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    sender_account_id UUID REFERENCES bank_accounts(id),
+    receiver_account_id UUID REFERENCES bank_accounts(id),
+    amount DECIMAL(15, 2) NOT NULL,
+    status VARCHAR(50) DEFAULT 'completed',
+    is_fraudulent BOOLEAN DEFAULT false,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);

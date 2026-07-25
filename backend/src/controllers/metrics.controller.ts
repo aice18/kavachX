@@ -5,14 +5,14 @@ export const getExecutiveMetrics = (req: Request, res: Response) => {
 // ... existing getExecutiveMetrics ...
   res.json({
     healthIndex: 27,
-    valueAtRisk: 12106344,
+    valueAtRisk: 5000000,
     complianceStance: "RBI SLA AT RISK",
     eventsPerHour: "4.2M+",
     latency: "14 ms",
     falsePositivesReduction: "80%",
     accuracy: "95%",
     predictiveRiskHeatmap: [
-      { category: 'Authentication', current: 40, predicted: 75, trend: 'up' },
+      { category: 'Corporate Account Takeover', current: 40, predicted: 95, trend: 'up' },
       { category: 'Data Exfiltration', current: 20, predicted: 35, trend: 'up' },
       { category: 'DDoS', current: 85, predicted: 60, trend: 'down' },
       { category: 'Phishing', current: 50, predicted: 90, trend: 'up' },
@@ -23,7 +23,7 @@ export const getExecutiveMetrics = (req: Request, res: Response) => {
       score: Math.floor(10 + Math.random() * 40)
     })),
     attackVectors: [
-      { name: 'Phishing', value: 45 },
+      { name: 'Business Email Compromise', value: 45 },
       { name: 'Credential Stuffing', value: 30 },
       { name: 'Insider Threat', value: 15 },
       { name: 'DDoS', value: 10 }
@@ -47,17 +47,26 @@ export const getSocMetrics = async (req: Request, res: Response) => {
       LIMIT 5
     `);
 
-    const incidentFeed = latestIncidents.map(inc => ({
-      id: inc.id,
-      time: new Date(inc.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      type: inc.title,
-      user: 'SYSTEM',
-      status: inc.status === 'active' ? 'Active' : 'Resolved'
-    }));
+    const incidentFeed = [
+      {
+        id: 'INC-2048',
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        type: 'Corporate Account Takeover (RTGS £5M)',
+        user: 'FINANCE_MGR_01',
+        status: 'Active'
+      },
+      ...latestIncidents.map(inc => ({
+        id: inc.id,
+        time: new Date(inc.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        type: inc.title,
+        user: 'SYSTEM',
+        status: inc.status === 'active' ? 'Active' : 'Resolved'
+      }))
+    ];
 
     res.json({
-      riskScore: Math.min(100, Math.floor(activeIncidents / 100) + 20), // Dynamic risk based on DB
-      activeIncidents,
+      riskScore: 92, // High risk due to INC-2048
+      activeIncidents: activeIncidents + 1,
       threatVolume: Array.from({ length: 24 }).map((_, i) => ({
         time: `${i}:00`,
         critical: Math.floor(Math.random() * 10),
@@ -79,6 +88,7 @@ export const getSocMetrics = async (req: Request, res: Response) => {
       ],
       incidentFeed,
     responseLog: [
+      { id: 'RL-1030', time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), action: 'RTGS Paused & VPN Killed', trigger: 'INC-2048: Highly anomalous sequence', impact: '£5M Transfer Halted. Target isolated.', status: 'Completed', type: 'network' },
       { id: 'RL-1029', time: '10:46 AM', action: 'Account Lockout', trigger: 'Anomalous geographic login attempt', impact: 'Prevented unauthorized access. User USR_1254 locked out.', status: 'Completed', type: 'identity' },
       { id: 'RL-1028', time: '10:31 AM', action: 'IP Blocked', trigger: 'Multiple failed API auths', impact: 'Blocked traffic from 45.33.x.x. API Gateway protected.', status: 'Completed', type: 'network' },
       { id: 'RL-1027', time: '09:16 AM', action: 'Session Terminated', trigger: 'Unusual data exfiltration pattern', impact: 'Terminated DB_SYNC session. Data leakage stopped.', status: 'Completed', type: 'data' },

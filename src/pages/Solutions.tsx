@@ -56,6 +56,31 @@ export default function Solutions() {
             </motion.div>
           ))}
         </div>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="mt-20 bg-slate-900 rounded-3xl p-8 md:p-12 overflow-hidden relative shadow-2xl"
+        >
+          <div className="absolute right-0 top-0 w-1/2 h-full bg-gradient-to-l from-blue-600/20 to-transparent pointer-events-none" />
+          <div className="relative z-10 md:w-2/3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 font-semibold text-sm mb-6">
+              Case Study
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Corporate Account Takeover & High-Value RTGS Fraud
+            </h2>
+            <p className="text-slate-300 text-lg mb-8 max-w-xl leading-relaxed">
+              Discover how KavachX correlates disparate cyber telemetry with core banking transactions to detect and stop a £5 million fraud attempt in real-time.
+            </p>
+            <Link 
+              to="/use-cases/rtgs-fraud"
+              className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-500 text-white px-6 py-3 rounded-xl font-medium transition-colors"
+            >
+              Explore Use Case <ArrowLeft className="w-4 h-4 rotate-180" />
+            </Link>
+          </div>
+        </motion.div>
       </main>
     </div>
   );

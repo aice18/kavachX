@@ -82,8 +82,8 @@ export default function RiskAnalytics() {
         </div>
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col md:flex-row">
-        <div className="p-6 md:w-1/3 bg-slate-50 border-r border-slate-200">
+      <div className="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden flex flex-col lg:flex-row">
+        <div className="p-6 lg:w-1/3 bg-slate-50 border-r border-slate-200">
           <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
             <Activity className="w-5 h-5 text-indigo-500" />
             {t('risk.active_vectors', 'Active Attack Vectors')}
@@ -114,7 +114,7 @@ export default function RiskAnalytics() {
           </div>
         </div>
         
-        <div className="p-6 md:w-2/3">
+        <div className="p-6 lg:w-2/3 border-r border-slate-200">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
               <Clock className="w-5 h-5 text-blue-500" />
@@ -123,84 +123,90 @@ export default function RiskAnalytics() {
             <button 
               onClick={runSequenceAnalysis} 
               disabled={analyzingSeq}
-              className="px-3 py-1.5 text-xs font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg flex items-center gap-1.5 transition-colors disabled:opacity-50"
+              className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg flex items-center gap-2 transition-colors disabled:opacity-50 shadow-sm"
             >
-              <Sparkles className="w-3.5 h-3.5" />
-              {analyzingSeq ? t('risk.analyzing', 'Analyzing...') : t('risk.run_sequence', 'Run Sequence Analysis')}
+              <Sparkles className="w-4 h-4" />
+              {analyzingSeq ? t('risk.analyzing', 'Running AI Sequence Analysis...') : t('risk.run_sequence', 'Run Sequence Analysis')}
             </button>
           </div>
 
           {sequenceData && (
-            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-6 bg-indigo-50 border border-indigo-100 p-4 rounded-xl">
-              <div className="flex justify-between items-start mb-2">
-                <span className="text-indigo-800 font-semibold">{t('risk.ai_sequence_verdict', 'AI Sequence Analysis Verdict')}</span>
-                <span className={`px-2 py-1 rounded text-xs font-bold ${sequenceData.threatDetected ? 'bg-red-200 text-red-800' : 'bg-green-200 text-green-800'}`}>
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="mb-8 bg-indigo-50 border border-indigo-100 p-6 rounded-xl shadow-sm">
+              <div className="flex justify-between items-start mb-3">
+                <span className="text-indigo-900 font-bold text-lg flex items-center gap-2">
+                  <Sparkles className="w-5 h-5" />
+                  {t('risk.ai_sequence_verdict', 'AI Sequence Analysis Verdict')}
+                </span>
+                <span className={`px-3 py-1.5 rounded-md text-sm font-bold ${sequenceData.threatDetected ? 'bg-red-200 text-red-900' : 'bg-green-200 text-green-900'}`}>
                   {t('risk.risk_score', 'Risk Score:')} {sequenceData.sequenceRiskScore}
                 </span>
               </div>
-              <p className="text-sm text-indigo-700 mb-1"><strong>{t('risk.threat_type', 'Threat Type:')}</strong> {sequenceData.threatType}</p>
-              <p className="text-sm text-indigo-700"><strong>{t('risk.reasoning', 'Reasoning:')}</strong> {sequenceData.reasoning}</p>
+              <p className="text-base text-indigo-800 mb-2"><strong>{t('risk.threat_type', 'Threat Type:')}</strong> {sequenceData.threatType}</p>
+              <p className="text-base text-indigo-800"><strong>{t('risk.reasoning', 'Reasoning:')}</strong> {sequenceData.reasoning}</p>
             </motion.div>
           )}
           
           <div className="relative pl-8 space-y-8 before:absolute before:inset-0 before:ml-[1.1rem] before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 before:to-transparent">
             
             <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-slate-200 text-slate-500 group-[.is-active]:bg-blue-600 group-[.is-active]:text-white shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm relative z-10">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full border-4 border-white bg-slate-200 text-slate-500 group-[.is-active]:bg-blue-600 group-[.is-active]:text-white shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-md relative z-10 font-bold text-lg">
                 1
               </div>
-              <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-slate-200 shadow-sm bg-white">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('risk.current_state', 'Current State')}</span>
-                  <span className="text-xs text-slate-400">{t('risk.t_0', 'T=0')}</span>
+              <div className="w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] p-6 rounded-xl border border-slate-200 shadow-sm bg-white hover:shadow-md transition-shadow">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold text-blue-600 uppercase tracking-wider bg-blue-50 px-2 py-1 rounded">{t('risk.current_state', 'Current State')}</span>
+                  <span className="text-sm font-medium text-slate-500">{t('risk.t_0', 'T=0')}</span>
                 </div>
-                <h4 className="font-bold text-slate-900 text-sm mb-1">{t('risk.vpn_comp', 'VPN Compromise & Network Discovery')}</h4>
-                <p className="text-sm text-slate-600">{t('risk.vpn_desc', 'Attacker has established a foothold via compromised VPN credentials and is mapping the internal subnet.')}</p>
+                <h4 className="font-black text-slate-900 text-lg mb-2">{t('risk.vpn_comp', 'VPN Compromise & Network Discovery')}</h4>
+                <p className="text-base text-slate-600">{t('risk.vpn_desc', 'Attacker has established a foothold via compromised VPN credentials and is mapping the internal subnet.')}</p>
               </div>
             </div>
 
             <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-slate-200 text-slate-500 group-[.is-active]:bg-orange-500 group-[.is-active]:text-white shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm relative z-10">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full border-4 border-white bg-slate-200 text-slate-500 group-[.is-active]:bg-orange-500 group-[.is-active]:text-white shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-md relative z-10 font-bold text-lg">
                 2
               </div>
-              <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-orange-200 shadow-sm bg-orange-50/50">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-semibold text-orange-600 uppercase tracking-wider">{t('risk.in_progress', 'In Progress')}</span>
-                  <span className="text-xs text-orange-500 font-medium">{t('risk.t_15', 'T+15 mins')}</span>
+              <motion.div 
+                animate={{ boxShadow: ['0px 0px 0px rgba(249,115,22,0)', '0px 0px 20px rgba(249,115,22,0.2)', '0px 0px 0px rgba(249,115,22,0)'] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] p-6 rounded-xl border border-orange-200 shadow-sm bg-orange-50"
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold text-orange-600 uppercase tracking-wider bg-orange-100 px-2 py-1 rounded flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-orange-500 animate-pulse"></span> {t('risk.in_progress', 'In Progress')}</span>
+                  <span className="text-sm text-orange-600 font-bold">{t('risk.t_15', 'T+15 mins')}</span>
                 </div>
-                <h4 className="font-bold text-slate-900 text-sm mb-1">{t('risk.db_enum', 'Database Enumeration')}</h4>
-                <p className="text-sm text-slate-600">{t('risk.db_desc', 'Attempting to identify sensitive tables containing PII and transactional records within CORE_DB.')}</p>
-              </div>
+                <h4 className="font-black text-slate-900 text-lg mb-2">{t('risk.db_enum', 'Database Enumeration')}</h4>
+                <p className="text-base text-slate-700">{t('risk.db_desc', 'Attempting to identify sensitive tables containing PII and transactional records within CORE_DB.')}</p>
+              </motion.div>
             </div>
 
             <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-slate-200 text-slate-500 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm relative z-10">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full border-4 border-white bg-slate-100 text-slate-400 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm relative z-10 font-bold text-lg">
                 3
               </div>
-              <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-slate-200 border-dashed shadow-sm bg-white opacity-60">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">{t('risk.predicted_action', 'Predicted Action')}</span>
-                  <span className="text-xs text-slate-400">{t('risk.t_45', 'T+45 mins')}</span>
+              <div className="w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] p-6 rounded-xl border border-slate-200 border-dashed shadow-sm bg-slate-50/50">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">{t('risk.predicted_action', 'Predicted Action')}</span>
+                  <span className="text-sm font-medium text-slate-400">{t('risk.t_45', 'T+45 mins')}</span>
                 </div>
-                <h4 className="font-bold text-slate-900 text-sm mb-1">{t('risk.cred_dump', 'Credential Dumping')}</h4>
-                <p className="text-sm text-slate-600">{t('risk.cred_desc', 'Expected to target memory or registry for privilege escalation to domain admin.')}</p>
+                <h4 className="font-bold text-slate-800 text-lg mb-2">{t('risk.cred_dump', 'Credential Dumping')}</h4>
+                <p className="text-base text-slate-500">{t('risk.cred_desc', 'Expected to target memory or registry for privilege escalation to domain admin.')}</p>
               </div>
             </div>
 
             <div className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-white bg-slate-200 text-slate-500 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm relative z-10">
-                <AlertTriangle className="w-4 h-4" />
+              <div className="flex items-center justify-center w-12 h-12 rounded-full border-4 border-red-50 bg-red-100 text-red-500 shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm relative z-10">
+                <AlertTriangle className="w-5 h-5" />
               </div>
-              <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4 rounded-xl border border-red-200 border-dashed shadow-sm bg-red-50/30 opacity-60">
-                <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs font-semibold text-red-500 uppercase tracking-wider">{t('risk.predicted_impact', 'Predicted Impact')}</span>
-                  <span className="text-xs text-red-400 font-medium">{t('risk.t_120', 'T+120 mins')}</span>
+              <div className="w-[calc(100%-4rem)] md:w-[calc(50%-3rem)] p-6 rounded-xl border border-red-200 border-dashed shadow-sm bg-red-50/30">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold text-red-500 uppercase tracking-wider">{t('risk.predicted_impact', 'Predicted Impact')}</span>
+                  <span className="text-sm font-bold text-red-500">{t('risk.t_120', 'T+120 mins')}</span>
                 </div>
-                <h4 className="font-bold text-red-900 text-sm mb-1">{t('risk.unauth_rtgs', 'Unauthorized RTGS Transfer')}</h4>
-                <p className="text-sm text-red-700/80">{t('risk.unauth_desc', 'If not contained, the attacker will likely attempt to initiate fraudulent high-value transfers.')}</p>
+                <h4 className="font-black text-red-900 text-lg mb-2">{t('risk.unauth_rtgs', 'Unauthorized RTGS Transfer')}</h4>
+                <p className="text-base text-red-700/90 font-medium">{t('risk.unauth_desc', 'If not contained, the attacker will likely attempt to initiate fraudulent high-value transfers.')}</p>
               </div>
             </div>
-
           </div>
         </div>
       </div>

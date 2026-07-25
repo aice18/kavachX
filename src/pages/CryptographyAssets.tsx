@@ -3,6 +3,7 @@ import { Server, ShieldCheck, AlertCircle, Fingerprint, Lock, CheckCircle2, Tren
 import { motion } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { useAuth } from '../AuthContext';
 
 const GaugeChart = ({ score }: { score: number }) => {
   const [animatedScore, setAnimatedScore] = useState(0);
@@ -66,6 +67,40 @@ const GaugeChart = ({ score }: { score: number }) => {
 
 export default function CryptographyAssets() {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const isL1 = user?.role === 'l1_analyst';
+  
+  // Dynamic State for PQC Migration
+  const [overallScore, setOverallScore] = useState(82);
+  const [hndlExposure, setHndlExposure] = useState(45.2);
+  const [isMigratingApi, setIsMigratingApi] = useState(false);
+  const [assets, setAssets] = useState([
+    { id: 'api', name: t('crypto.a1_name', 'Core Banking API Gateway'), algo: 'RSA', size: '2048-bit', target: 'ML-KEM-768', status: t('crypto.at_risk', 'At Risk') },
+    { id: 'mobile', name: t('crypto.a2_name', 'Mobile App Authentication'), algo: 'ECDSA', size: 'P-256', target: 'ML-DSA-65', status: t('crypto.migrating', 'Migrating') },
+    { id: 'swift', name: t('crypto.a3_name', 'Interbank SWIFT Node'), algo: t('crypto.a3_algo', 'Hybrid (RSA + Kyber)'), size: 'Various', target: 'FIPS 203', status: t('crypto.ready', 'Ready') },
+    { id: 'vault', name: t('crypto.a4_name', 'Customer Document Vault'), algo: 'AES-GCM', size: '256-bit', target: t('crypto.a4_target', 'Quantum Safe'), status: t('crypto.ready', 'Ready') },
+  ]);
+
+  const handleMigrate = () => {
+    setIsMigratingApi(true);
+    
+    // Simulate migration pipeline
+    setTimeout(() => {
+      setAssets(prev => prev.map(a => 
+        a.id === 'api' ? { ...a, algo: 'Hybrid (RSA + ML-KEM)', status: 'Migrating' } : a
+      ));
+    }, 1500);
+
+    setTimeout(() => {
+      setAssets(prev => prev.map(a => 
+        a.id === 'api' ? { ...a, status: 'Ready' } : a
+      ));
+      setOverallScore(95);
+      setHndlExposure(12.4);
+      setIsMigratingApi(false);
+    }, 4000);
+  };
+
   return (
     <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto space-y-8">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
@@ -76,7 +111,7 @@ export default function CryptographyAssets() {
         <div className="flex items-center gap-4 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
           <div className="flex flex-col">
             <span className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-2 text-center">{t('crypto.overall_score', 'Overall Score')}</span>
-            <GaugeChart score={82} />
+            <GaugeChart score={overallScore} />
           </div>
         </div>
       </div>
@@ -118,8 +153,10 @@ export default function CryptographyAssets() {
             </p>
           </div>
           <div>
-            <div className="text-3xl font-black mb-1">{t('crypto.hndl_val', '₹45.2 Lakh')}</div>
-            <div className="text-sm text-emerald-400 font-medium">{t('crypto.hndl_sub', 'Reduced by 85% since Q2 migration')}</div>
+            <div className="text-3xl font-black mb-1">₹{hndlExposure.toFixed(1)} Lakh</div>
+            <div className="text-sm text-emerald-400 font-medium">
+              {overallScore === 95 ? 'Reduced by 92% after ML-KEM migration' : 'Reduced by 85% since Q2 migration'}
+            </div>
           </div>
         </div>
       </div>
@@ -145,18 +182,18 @@ export default function CryptographyAssets() {
                 <th className="px-6 py-4">{t('crypto.th_size', 'Key Size')}</th>
                 <th className="px-6 py-4">{t('crypto.th_target', 'Target (PQC)')}</th>
                 <th className="px-6 py-4">{t('crypto.th_readiness', 'Readiness')}</th>
+                <th className="px-6 py-4"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {[
-                { name: t('crypto.a1_name', 'Core Banking API Gateway'), algo: 'RSA', size: '2048-bit', target: 'ML-KEM-768', status: t('crypto.at_risk', 'At Risk') },
-                { name: t('crypto.a2_name', 'Mobile App Authentication'), algo: 'ECDSA', size: 'P-256', target: 'ML-DSA-65', status: t('crypto.migrating', 'Migrating') },
-                { name: t('crypto.a3_name', 'Interbank SWIFT Node'), algo: t('crypto.a3_algo', 'Hybrid (RSA + Kyber)'), size: 'Various', target: 'FIPS 203', status: t('crypto.ready', 'Ready') },
-                { name: t('crypto.a4_name', 'Customer Document Vault'), algo: 'AES-GCM', size: '256-bit', target: t('crypto.a4_target', 'Quantum Safe'), status: t('crypto.ready', 'Ready') },
-              ].map((asset, i) => (
+              {assets.map((asset, i) => (
                 <tr key={i} className="hover:bg-slate-50/50 transition-colors">
                   <td className="px-6 py-4 font-medium text-slate-900">{asset.name}</td>
-                  <td className="px-6 py-4 text-slate-600">{asset.algo}</td>
+                  <td className="px-6 py-4 text-slate-600">
+                    <span className={asset.id === 'api' && isMigratingApi ? 'animate-pulse text-indigo-600 font-bold' : ''}>
+                      {asset.algo}
+                    </span>
+                  </td>
                   <td className="px-6 py-4 text-slate-600">{asset.size}</td>
                   <td className="px-6 py-4 text-slate-900 font-medium">{asset.target}</td>
                   <td className="px-6 py-4">
@@ -169,6 +206,22 @@ export default function CryptographyAssets() {
                       {asset.status === 'At Risk' && <AlertCircle className="w-3.5 h-3.5" />}
                       {asset.status}
                     </span>
+                  </td>
+                  <td className="px-6 py-4 text-right">
+                    {asset.id === 'api' && asset.status === 'At Risk' && (
+                      <button 
+                        onClick={handleMigrate}
+                        disabled={isMigratingApi || isL1}
+                        title={isL1 ? "L1 Analysts do not have migration privileges" : "Migrate to ML-KEM"}
+                        className={`text-xs font-bold px-3 py-1.5 rounded-lg transition-colors shadow-sm
+                          ${isL1 
+                            ? 'bg-slate-200 text-slate-400 cursor-not-allowed opacity-60' 
+                            : 'bg-indigo-600 hover:bg-indigo-700 text-white disabled:opacity-50'
+                          }`}
+                      >
+                        {isMigratingApi ? 'Migrating...' : (isL1 ? '🔒 Locked (L1)' : 'Migrate to ML-KEM')}
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}

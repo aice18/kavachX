@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { ShieldAlert, Search, Server, Database, Network, ArrowRight, BarChart3, Activity, PieChart as PieChartIcon, Filter, Clock, CheckCircle2, Lock, Pause, ShieldBan, X, Play } from 'lucide-react';
+import React, { useEffect, useState, useRef } from 'react';
+import { ShieldAlert, Search, Server, Database, Network, ArrowRight, BarChart3, Activity, PieChart as PieChartIcon, Filter, Clock, CheckCircle2, Lock, Pause, ShieldBan, X, Play, Brain, RefreshCw, RotateCcw } from 'lucide-react';
+import { io } from 'socket.io-client';
 import { motion, AnimatePresence, Variants } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, PieChart, Pie } from 'recharts';
 import ThreatMap from '../components/ThreatMap';
+import LiveThreatGraph from '../components/LiveThreatGraph';
+import AICopilotSidebar from '../components/AICopilotSidebar';
+import EdgeTriageTicker from '../components/EdgeTriageTicker';
 
 export default function SOCDashboard() {
   const { t } = useTranslation();
@@ -33,9 +37,43 @@ export default function SOCDashboard() {
     }
   };
 
+  const [xgbAccuracy, setXgbAccuracy] = useState(94.2);
+  const [rfAccuracy, setRfAccuracy] = useState(91.8);
+  const [xgbStatus, setXgbStatus] = useState<'Deployed' | 'Retraining' | 'Rolling back'>('Deployed');
+  const [rfStatus, setRfStatus] = useState<'Deployed' | 'Retraining' | 'Rolling back'>('Deployed');
+
+  const xgbStatusRef = useRef(xgbStatus);
+  const rfStatusRef = useRef(rfStatus);
+
+  useEffect(() => {
+    xgbStatusRef.current = xgbStatus;
+    rfStatusRef.current = rfStatus;
+  }, [xgbStatus, rfStatus]);
+
+  const handleModelAction = (model: 'xgb' | 'rf', action: 'retrain' | 'deploy' | 'rollback') => {
+    const setStatus = model === 'xgb' ? setXgbStatus : setRfStatus;
+    const setAcc = model === 'xgb' ? setXgbAccuracy : setRfAccuracy;
+    
+    if (action === 'retrain') {
+      setStatus('Retraining');
+      setTimeout(() => {
+        setStatus('Deployed');
+        setAcc(prev => Math.min(99.9, prev + Math.random() * 2));
+      }, 3000);
+    } else if (action === 'rollback') {
+      setStatus('Rolling back');
+      setTimeout(() => {
+        setStatus('Deployed');
+        setAcc(prev => Math.max(90, prev - Math.random() * 1.5));
+      }, 2000);
+    } else {
+      setStatus('Deployed');
+    }
+  };
+
   useEffect(() => {
     const fetchData = () => {
-      fetch(`${import.meta.env.PROD ? 'https://kavachx-6wm9.onrender.com' : ''}/api/metrics/soc`)
+      fetch('/api/metrics/soc')
         .then(res => res.json())
         .then(setData)
         .catch(err => console.error("Error fetching SOC data:", err));
@@ -44,10 +82,36 @@ export default function SOCDashboard() {
     // Initial fetch
     fetchData();
     
-    // Poll every 5 seconds
-    const intervalId = setInterval(fetchData, 5000);
+    // Connect to WebSocket
+    const socket = io(import.meta.env.PROD ? 'https://kavachx-6wm9.onrender.com' : 'http://localhost:3002');
     
-    return () => clearInterval(intervalId);
+    socket.on('telemetry_update', (telemetry) => {
+      setData((prev: any) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          riskScore: telemetry.riskScore,
+          activeIncidents: telemetry.activeIncidents
+        };
+      });
+      
+      setXgbAccuracy(prev => (xgbStatusRef.current === 'Deployed' ? telemetry.xgbAccuracy : prev));
+      setRfAccuracy(prev => (rfStatusRef.current === 'Deployed' ? telemetry.rfAccuracy : prev));
+    });
+
+    socket.on('critical_incident', (incident) => {
+      setData((prev: any) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          incidentFeed: [incident, ...(prev.incidentFeed || [])]
+        };
+      });
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   if (!data) return (
@@ -88,6 +152,16 @@ export default function SOCDashboard() {
           </p>
         </div>
         <div className="flex gap-3 w-full sm:w-auto">
+          <button 
+            onClick={() => {
+              fetch('/api/demo/trigger-attack', { method: 'POST' })
+                .then(res => res.json())
+                .then(resData => console.log('Demo triggered:', resData));
+            }}
+            className="w-full sm:w-auto bg-red-600 px-4 py-2 rounded-lg text-sm font-medium text-white border border-red-700 shadow-sm flex items-center justify-center gap-2 hover:bg-red-700 transition-colors animate-pulse"
+          >
+             <ShieldAlert className="w-4 h-4" /> Simulate RTGS Cyber Attack
+          </button>
           <button className="w-full sm:w-auto bg-white px-4 py-2 rounded-lg text-sm font-medium text-slate-700 border border-slate-200 shadow-sm flex items-center justify-center gap-2 hover:bg-slate-50 transition-colors">
              <Search className="w-4 h-4" /> {t('soc.search', 'Search Logs')}
           </button>
@@ -112,8 +186,8 @@ export default function SOCDashboard() {
               {/* Background Decorative Grid */}
               <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjEiIGZpbGw9InJnYmEoMCwwLDAsMC4wNSkiLz48L3N2Zz4=')] [mask-image:linear-gradient(to_bottom,white,transparent)]"></div>
               
-              <div className="w-full h-full absolute inset-0 z-10 p-2">
-                <ThreatMap />
+              <div className="w-full h-full absolute inset-0 z-10 p-2 rounded-2xl overflow-hidden">
+                <LiveThreatGraph />
               </div>
             </div>
           </motion.div>
@@ -257,43 +331,127 @@ export default function SOCDashboard() {
             </motion.div>
           )}
 
-          {/* Correlation Efficiency */}
-          {data.correlationEfficiency && (
-            <motion.div variants={item} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow text-center relative overflow-hidden">
-               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-green-50 to-transparent rounded-bl-full opacity-50"></div>
-               <h3 className="text-sm font-semibold text-slate-900 flex items-center justify-center gap-2 mb-2 relative z-10">
-                 <PieChartIcon className="w-4 h-4 text-green-500" />
-                 {t('soc.ai_efficiency', 'AI Correlation Efficiency')}
-               </h3>
-               <p className="text-xs text-slate-500 mb-4 relative z-10">{t('soc.reduction', 'Reduction in alert fatigue')}</p>
-               <div className="h-[140px] relative z-10">
-                 <ResponsiveContainer width="100%" height="100%">
-                   <PieChart>
-                     <Pie
-                       data={[
-                         { name: 'Correlated', value: data.correlationEfficiency },
-                         { name: 'Raw Alerts', value: 100 - data.correlationEfficiency }
-                       ]}
-                       cx="50%"
-                       cy="50%"
-                       innerRadius={45}
-                       outerRadius={60}
-                       startAngle={90}
-                       endAngle={-270}
-                       dataKey="value"
-                       stroke="none"
-                     >
-                       <Cell fill="#10b981" />
-                       <Cell fill="#f1f5f9" />
-                     </Pie>
-                   </PieChart>
-                 </ResponsiveContainer>
-                 <div className="absolute inset-0 flex items-center justify-center flex-col">
-                   <span className="text-3xl font-bold text-slate-900">{data.correlationEfficiency}%</span>
-                 </div>
-               </div>
-            </motion.div>
-          )}
+          {/* ML Accuracy Metrics (TP / TN) */}
+          <motion.div variants={item} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-indigo-50 to-transparent rounded-bl-full opacity-50"></div>
+             <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-2 mb-2 relative z-10">
+               <Brain className="w-4 h-4 text-indigo-500" />
+               Multi-Agent ML Accuracy
+             </h3>
+             <p className="text-xs text-slate-500 mb-4 relative z-10">Performance metrics over last 1M simulated transactions</p>
+             
+             <div className="grid grid-cols-2 gap-4 relative z-10">
+                <div className="bg-emerald-50/50 p-3 rounded-xl border border-emerald-100">
+                  <div className="text-xs text-emerald-600 font-bold uppercase tracking-wider mb-1">True Positives</div>
+                  <div className="text-2xl font-black text-emerald-700">99.8%</div>
+                  <div className="text-[10px] text-emerald-600 mt-1">Correctly caught fraud</div>
+                </div>
+                <div className="bg-blue-50/50 p-3 rounded-xl border border-blue-100">
+                  <div className="text-xs text-blue-600 font-bold uppercase tracking-wider mb-1">True Negatives</div>
+                  <div className="text-2xl font-black text-blue-700">99.9%</div>
+                  <div className="text-[10px] text-blue-600 mt-1">Correctly allowed benign</div>
+                </div>
+                <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                  <div className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">False Positives</div>
+                  <div className="text-2xl font-black text-slate-700">0.05%</div>
+                  <div className="text-[10px] text-slate-500 mt-1">Reduced alert fatigue</div>
+                </div>
+                <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                  <div className="text-xs text-slate-500 font-bold uppercase tracking-wider mb-1">False Negatives</div>
+                  <div className="text-2xl font-black text-slate-700">0.01%</div>
+                  <div className="text-[10px] text-slate-500 mt-1">Missed threats</div>
+                </div>
+             </div>
+          </motion.div>
+
+          {/* Active ML Models */}
+          <motion.div variants={item} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+            <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-2 mb-4">
+              <Database className="w-4 h-4 text-purple-500" />
+              Active ML Models
+            </h3>
+            <div className="space-y-4">
+              {/* XGBoost Model */}
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <div className="text-sm font-bold text-slate-900">XGBoost Classifier</div>
+                    <div className="text-xs text-slate-500">RTGS Fraud Detection</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-lg font-black text-purple-700">{xgbAccuracy.toFixed(2)}%</div>
+                    <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">{xgbStatus}</div>
+                  </div>
+                </div>
+                <div className="flex gap-2 mt-3">
+                  <button 
+                    onClick={() => handleModelAction('xgb', 'retrain')}
+                    disabled={xgbStatus !== 'Deployed'}
+                    className="flex-1 py-1.5 flex justify-center items-center gap-1.5 text-xs font-medium rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 disabled:opacity-50 transition-colors"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${xgbStatus === 'Retraining' ? 'animate-spin' : ''}`} />
+                    Retrain
+                  </button>
+                  <button 
+                    onClick={() => handleModelAction('xgb', 'deploy')}
+                    disabled={xgbStatus === 'Deployed'}
+                    className="flex-1 py-1.5 flex justify-center items-center gap-1.5 text-xs font-medium rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 disabled:opacity-50 transition-colors"
+                  >
+                    <Play className="w-3.5 h-3.5" />
+                    Deploy
+                  </button>
+                  <button 
+                    onClick={() => handleModelAction('xgb', 'rollback')}
+                    disabled={xgbStatus !== 'Deployed'}
+                    className="flex-1 py-1.5 flex justify-center items-center gap-1.5 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 disabled:opacity-50 transition-colors"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    Rollback
+                  </button>
+                </div>
+              </div>
+
+              {/* Random Forest Model */}
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50">
+                <div className="flex justify-between items-start mb-2">
+                  <div>
+                    <div className="text-sm font-bold text-slate-900">Random Forest</div>
+                    <div className="text-xs text-slate-500">Loan Default Predictor</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-lg font-black text-emerald-700">{rfAccuracy.toFixed(2)}%</div>
+                    <div className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">{rfStatus}</div>
+                  </div>
+                </div>
+                <div className="flex gap-2 mt-3">
+                  <button 
+                    onClick={() => handleModelAction('rf', 'retrain')}
+                    disabled={rfStatus !== 'Deployed'}
+                    className="flex-1 py-1.5 flex justify-center items-center gap-1.5 text-xs font-medium rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 disabled:opacity-50 transition-colors"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 ${rfStatus === 'Retraining' ? 'animate-spin' : ''}`} />
+                    Retrain
+                  </button>
+                  <button 
+                    onClick={() => handleModelAction('rf', 'deploy')}
+                    disabled={rfStatus === 'Deployed'}
+                    className="flex-1 py-1.5 flex justify-center items-center gap-1.5 text-xs font-medium rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 disabled:opacity-50 transition-colors"
+                  >
+                    <Play className="w-3.5 h-3.5" />
+                    Deploy
+                  </button>
+                  <button 
+                    onClick={() => handleModelAction('rf', 'rollback')}
+                    disabled={rfStatus !== 'Deployed'}
+                    className="flex-1 py-1.5 flex justify-center items-center gap-1.5 text-xs font-medium rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 disabled:opacity-50 transition-colors"
+                  >
+                    <RotateCcw className="w-3.5 h-3.5" />
+                    Rollback
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
         </div>
 
       </div>
@@ -489,6 +647,11 @@ export default function SOCDashboard() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* New AI & Architecture Visualizers */}
+      <AICopilotSidebar />
+      <EdgeTriageTicker />
+
     </motion.div>
   );
 }

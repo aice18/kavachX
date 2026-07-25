@@ -4,8 +4,12 @@ import { createServer as createViteServer } from "vite";
 import jwt from "jsonwebtoken";
 import cookieParser from "cookie-parser";
 import { GoogleGenAI } from "@google/genai";
+import { Server as SocketIOServer } from "socket.io";
+import http from "http";
 
 const app = express();
+const httpServer = http.createServer(app);
+const io = new SocketIOServer(httpServer, { cors: { origin: "*" } });
 const PORT = 3000;
 const JWT_SECRET = process.env.JWT_SECRET || "kavachx-secret-key-for-prototype";
 
@@ -131,6 +135,16 @@ app.get("/api/metrics/soc", (req, res) => {
   });
 });
 
+// Telemetry Broadcast
+setInterval(() => {
+  io.emit("telemetry_update", {
+    riskScore: 40 + Math.floor(Math.random() * 20),
+    activeIncidents: 10 + Math.floor(Math.random() * 8),
+    xgbAccuracy: 90 + Math.random() * 9,
+    rfAccuracy: 90 + Math.random() * 9
+  });
+}, 3000);
+
 app.post("/api/copilot/chat", async (req, res) => {
   if (!ai) {
     return res.status(500).json({ error: "Gemini API is not configured on the server." });
@@ -178,7 +192,7 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, "0.0.0.0", () => {
+  httpServer.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running on port ${PORT}`);
   });
 }

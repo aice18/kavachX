@@ -5,6 +5,7 @@ import LanguageSwitcher from '../components/LanguageSwitcher';
 import { LayoutDashboard, ShieldAlert, Bot, LogOut, Settings, Bell, Menu, Target, FlaskConical, Server, Activity } from 'lucide-react';
 import { useAuth } from '../AuthContext';
 import { useTranslation } from 'react-i18next';
+import FloatingBot from '../components/FloatingBot';
 
 export default function DashboardLayout() {
   const { user, logout } = useAuth();
@@ -17,17 +18,29 @@ export default function DashboardLayout() {
     logout();
     navigate('/');
   };
+  const getRoleDisplayName = (role?: string) => {
+    switch (role) {
+      case 'executive': return 'Executive';
+      case 'soc': return 'SOC Analyst';
+      case 'threat_analyst': return 'Threat Analyst';
+      case 'fraud_analyst': return 'Fraud Analyst';
+      case 'admin': return 'Administrator';
+      default: return 'User';
+    }
+  };
 
   const navItems = [
-    { name: t('sidebar.executive', 'Executive Overview'), icon: LayoutDashboard, path: '/dashboard/executive' },
-    { name: t('sidebar.soc', 'SOC Console'), icon: ShieldAlert, path: '/dashboard/soc' },
-    { name: t('sidebar.copilot', 'AI Copilot'), icon: Bot, path: '/dashboard/copilot' },
-    { name: t('sidebar.pipeline', 'Data Pipeline'), icon: Activity, path: '/dashboard/pipeline-demo', badge: 'DEMO' },
-    { name: t('sidebar.risk', 'Risk Analytics'), icon: Target, path: '/dashboard/risk' },
-    { name: t('sidebar.whatif', 'What-If Simulator'), icon: FlaskConical, path: '/dashboard/what-if', badge: 'EXP' },
+    { name: t('sidebar.executive', 'Executive Command Center'), icon: LayoutDashboard, path: '/dashboard/executive', allowedRoles: ['l3_soc'] },
+    { name: t('sidebar.soc', 'SOC Console'), icon: ShieldAlert, path: '/dashboard' },
+    { name: t('sidebar.fraud', 'Fraud Management'), icon: Activity, path: '/dashboard/fraud' },
+    { name: t('sidebar.threat', 'Threat Forecast'), icon: Target, path: '/dashboard/risk' },
+    { name: t('sidebar.investigator', 'Risk Analysis'), icon: Bot, path: '/dashboard/investigator' },
     { name: t('sidebar.crypto', 'Cryptography Assets'), icon: Server, path: '/dashboard/crypto' },
   ];
 
+  const visibleNavItems = navItems.filter(item => 
+    !item.allowedRoles || item.allowedRoles.includes(user?.role || '') || user?.role === 'admin'
+  );
   return (
     <div className="h-screen bg-slate-50 flex overflow-hidden">
       {/* Sidebar */}
@@ -56,7 +69,7 @@ export default function DashboardLayout() {
         </div>
         
         <nav className="flex-1 p-3 space-y-2 overflow-y-auto overflow-x-hidden">
-          {navItems.map((item) => (
+          {visibleNavItems.map((item) => (
             <NavLink
               key={item.name}
               to={item.path}
@@ -82,11 +95,6 @@ export default function DashboardLayout() {
                         className="overflow-hidden flex items-center gap-2"
                       >
                         {item.name}
-                        {item.badge && (
-                          <span className="px-1.5 py-0.5 text-[10px] font-bold tracking-wider text-blue-600 bg-blue-100 border border-blue-200 rounded shrink-0">
-                            {item.badge}
-                          </span>
-                        )}
                       </motion.span>
                     )}
                   </AnimatePresence>
@@ -112,8 +120,8 @@ export default function DashboardLayout() {
             </div>
             {isSidebarOpen && (
               <div className="overflow-hidden">
-                <div className="text-sm font-medium text-slate-900 truncate">{user?.email || 'admin@kavachx.com'}</div>
-                <div className="text-xs text-slate-500 truncate">{t('sidebar.ciso_view', 'CISO View')}</div>
+                <div className="text-sm font-medium text-slate-900 truncate">{user?.email || 'user@kavachx.com'}</div>
+                <div className="text-xs text-slate-500 truncate">{getRoleDisplayName(user?.role)}</div>
               </div>
             )}
           </div>
@@ -168,6 +176,9 @@ export default function DashboardLayout() {
           </AnimatePresence>
         </div>
       </main>
+
+      {/* Global Interactive Bot */}
+      <FloatingBot />
     </div>
   );
 }

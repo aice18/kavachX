@@ -19,24 +19,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${import.meta.env.PROD ? 'https://kavachx-6wm9.onrender.com' : ''}/api/auth/verify`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.authenticated) {
-          setUser(data.user);
-        }
-      })
-      .finally(() => setLoading(false));
+    // Instant mock auth for demo
+    setLoading(false);
   }, []);
 
   const login = (token: string, user: User) => {
     setUser(user);
+    localStorage.setItem('demo_role', user.role);
   };
 
   const logout = () => {
-    fetch(`${import.meta.env.PROD ? 'https://kavachx-6wm9.onrender.com' : ''}/api/auth/logout`, { method: 'POST' }).then(() => {
-      setUser(null);
-    });
+    setUser(null);
+    localStorage.removeItem('demo_role');
   };
 
   return (

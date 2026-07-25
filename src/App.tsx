@@ -4,19 +4,16 @@ import { AuthProvider, useAuth } from './AuthContext';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import DashboardLayout from './layouts/DashboardLayout';
-import ExecutiveDashboard from './pages/ExecutiveDashboard';
 import SOCDashboard from './pages/SOCDashboard';
-import AICopilot from './pages/AICopilot';
+import ExecutiveDashboard from './pages/ExecutiveDashboard';
+import FraudDashboard from './pages/FraudDashboard';
 import RiskAnalytics from './pages/RiskAnalytics';
-import WhatIfSimulator from './pages/WhatIfSimulator';
+import AIInvestigator from './pages/AIInvestigator';
 import CryptographyAssets from './pages/CryptographyAssets';
-import Solutions from './pages/Solutions';
-import Documentation from './pages/Documentation';
-import DataPipelineDemo from './pages/DataPipeline';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
-  if (loading) return <div className="h-screen flex items-center justify-center text-electric-blue">Loading...</div>;
+  if (loading) return <div className="h-screen flex items-center justify-center text-indigo-500">Loading...</div>;
   if (!user) return <Navigate to="/login" replace />;
   return <>{children}</>;
 };
@@ -28,17 +25,14 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/solutions" element={<Solutions />} />
-          <Route path="/docs" element={<Documentation />} />
+          
           <Route path="/dashboard" element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
-            <Route index element={<Navigate to="executive" replace />} />
+            <Route index element={<SOCDashboard />} />
             <Route path="executive" element={<ExecutiveDashboard />} />
-            <Route path="soc" element={<SOCDashboard />} />
+            <Route path="fraud" element={<FraudDashboard />} />
             <Route path="risk" element={<RiskAnalytics />} />
-            <Route path="what-if" element={<WhatIfSimulator />} />
-            <Route path="copilot" element={<AICopilot />} />
+            <Route path="investigator" element={<AIInvestigator />} />
             <Route path="crypto" element={<CryptographyAssets />} />
-            <Route path="pipeline-demo" element={<DataPipelineDemo />} />
           </Route>
         </Routes>
       </BrowserRouter>
