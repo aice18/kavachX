@@ -11,7 +11,7 @@ Built by **Greybox Labs**
 
 ---
 
-[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-KavachX-success?style=for-the-badge)](https://kavach-x-omega.vercel.app/)
+[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-KavachX-success?style=for-the-badge)](https://kavach-x-gamma.vercel.app/)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)]()
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript)]()
 [![Gemini AI](https://img.shields.io/badge/Gemini-AI-8E75B2?style=for-the-badge)]()
@@ -22,7 +22,7 @@ Built by **Greybox Labs**
 
 ### 🌐 Live Deployment
 
-## https://kavach-x-omega.vercel.app/
+## https://kavach-x-gamma.vercel.app/
 
 </div>
 
@@ -809,7 +809,7 @@ Supports
 
 ### 🌐 Live Demo
 
-https://kavach-x-omega.vercel.app/
+https://kavach-x-gamma.vercel.app/
 
 ---
 
@@ -937,7 +937,7 @@ Special thanks to:
 
 🌐 **Live Demo**
 
-https://kavach-x-omega.vercel.app/
+https://kavach-x-gamma.vercel.app/
 
 ⭐ **GitHub Repository**
 
