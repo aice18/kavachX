@@ -1,7 +1,8 @@
 import neo4j, { Driver, Session } from 'neo4j-driver';
 import dotenv from 'dotenv';
+import path from 'path';
 
-dotenv.config();
+dotenv.config({ path: path.resolve(process.cwd(), 'backend/.env') });
 
 export let driver: Driver | null = null;
 

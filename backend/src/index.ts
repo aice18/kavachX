@@ -14,7 +14,9 @@ import demoRoutes from './routes/demo.routes.js';
 import { startSimulator } from './services/simulator.js';
 import { startCDCConsumer } from './services/cdcConsumer.service.js';
 
-dotenv.config();
+import path from 'path';
+
+dotenv.config({ path: path.resolve(process.cwd(), 'backend/.env') });
 
 const app = express();
 const PORT = process.env.PORT || 3002;
