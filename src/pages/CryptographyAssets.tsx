@@ -74,12 +74,42 @@ export default function CryptographyAssets() {
   const [overallScore, setOverallScore] = useState(82);
   const [hndlExposure, setHndlExposure] = useState(45.2);
   const [isMigratingApi, setIsMigratingApi] = useState(false);
+  const [isScanning, setIsScanning] = useState(false);
+  
   const [assets, setAssets] = useState([
-    { id: 'api', name: t('crypto.a1_name', 'Core Banking API Gateway'), algo: 'RSA', size: '2048-bit', target: 'ML-KEM-768', status: t('crypto.at_risk', 'At Risk') },
-    { id: 'mobile', name: t('crypto.a2_name', 'Mobile App Authentication'), algo: 'ECDSA', size: 'P-256', target: 'ML-DSA-65', status: t('crypto.migrating', 'Migrating') },
-    { id: 'swift', name: t('crypto.a3_name', 'Interbank SWIFT Node'), algo: t('crypto.a3_algo', 'Hybrid (RSA + Kyber)'), size: 'Various', target: 'FIPS 203', status: t('crypto.ready', 'Ready') },
-    { id: 'vault', name: t('crypto.a4_name', 'Customer Document Vault'), algo: 'AES-GCM', size: '256-bit', target: t('crypto.a4_target', 'Quantum Safe'), status: t('crypto.ready', 'Ready') },
+    { id: 'api', name: 'Core Banking API Gateway', algo: 'RSA', size: '2048-bit', target: 'ML-KEM-768 (FIPS 203)', status: t('crypto.at_risk', 'At Risk') },
+    { id: 'mobile', name: 'Mobile App Authentication', algo: 'ECDSA', size: 'P-256', target: 'ML-DSA-65 (FIPS 204)', status: t('crypto.migrating', 'Migrating') },
+    { id: 'swift', name: 'Interbank SWIFT Node', algo: 'Hybrid (RSA + ML-KEM)', size: 'Various', target: 'FIPS 203 Compliant', status: t('crypto.ready', 'Ready') },
+    { id: 'vault', name: 'Customer Document Vault', algo: 'AES-GCM', size: '256-bit', target: 'N/A (Quantum Safe)', status: t('crypto.ready', 'Ready') },
+    { id: 'payment', name: 'Payment HSM', algo: '3DES (Deprecated)', size: '168-bit', target: 'AES-256-GCM', status: t('crypto.at_risk', 'At Risk') },
+    { id: 'db', name: 'Core Database At-Rest Encryption', algo: 'AES-CBC', size: '128-bit', target: 'AES-256-GCM', status: t('crypto.at_risk', 'At Risk') },
+    { id: 'sso', name: 'Internal SSO (SAML)', algo: 'RSA', size: '2048-bit', target: 'ML-DSA-44', status: t('crypto.ready', 'Ready') },
+    { id: 'vpn', name: 'Corporate VPN Tunnels', algo: 'IKEv2 (DH)', size: 'Group 14', target: 'Hybrid PQ-IKEv2', status: t('crypto.at_risk', 'At Risk') },
   ]);
+
+  const handlePQCScan = () => {
+    setIsScanning(true);
+    // Simulate scan delay
+    setTimeout(() => {
+      // Find new risks and drop score
+      setOverallScore(58);
+      setHndlExposure(112.4);
+      
+      // Update assets to show newly discovered risks
+      setAssets(prev => prev.map(a => {
+        if (a.id === 'vault') {
+          return { ...a, algo: 'Legacy AES-128 (Grover Vulnerable)', status: t('crypto.at_risk', 'At Risk') };
+        }
+        return a;
+      }).concat([
+        { id: 'new_risk_1', name: 'Legacy Backup Server (Shadow IT)', algo: 'RSA', size: '1024-bit', target: 'Decommission', status: t('crypto.at_risk', 'At Risk') },
+        { id: 'new_risk_2', name: 'Third-Party Auth Oracle', algo: 'ECDSA', size: 'P-256 (Shor Vulnerable)', target: 'ML-DSA-44', status: t('crypto.at_risk', 'At Risk') },
+        { id: 'new_risk_3', name: 'Internal Root CA', algo: 'RSA', size: '4096-bit', target: 'SLH-DSA (FIPS 205)', status: t('crypto.at_risk', 'At Risk') }
+      ]));
+      
+      setIsScanning(false);
+    }, 2000);
+  };
 
   const handleMigrate = () => {
     setIsMigratingApi(true);
@@ -168,9 +198,13 @@ export default function CryptographyAssets() {
             {t('crypto.inventory', 'Active Cryptographic Inventory')}
           </h3>
           <button 
+            onClick={handlePQCScan}
+            disabled={isScanning}
             title="Scans all active cryptographic assets for Post-Quantum Cryptography vulnerabilities and readiness."
-            className="text-sm font-medium text-blue-600 hover:text-blue-700 bg-blue-50 px-4 py-2 rounded-lg transition-colors cursor-help">
-            {t('crypto.run_scan', 'PQC Scan')}
+            className={`text-sm font-medium px-4 py-2 rounded-lg transition-colors cursor-help
+              ${isScanning ? 'bg-slate-200 text-slate-500 cursor-wait' : 'text-blue-600 hover:text-blue-700 bg-blue-50'}
+            `}>
+            {isScanning ? 'Scanning Network...' : 'Run PQC Scanner'}
           </button>
         </div>
         <div className="overflow-x-auto">

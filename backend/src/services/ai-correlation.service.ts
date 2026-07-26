@@ -34,17 +34,11 @@ export const runAICorrelation = async (
         - Receiver: ${receiverAccount}
         - Telemetry: ${deviceInfo ? JSON.stringify(deviceInfo) : 'Unknown Device/IP'}
 
-        Based on this data, provide a JSON response evaluating the risk. 
+        Based on this data, evaluate the risk. 
         Focus on identifying fraud patterns, account takeovers, and look for subtle anomalies.
         If the telemetry suggests advanced encryption bypassing (e.g., impossible travel + high volume), flag it as a potential 'Quantum Risk Indicator'.
         
-        Respond ONLY with a valid JSON object matching this schema:
-        {
-            "riskScore": number (0-100),
-            "threatType": string (e.g., "Normal", "Account Takeover", "Money Laundering", "Quantum Risk Indicator"),
-            "isQuantumThreat": boolean,
-            "explainability": string (A 1-2 sentence explanation of WHY you assigned this score, proving explainable AI)
-        }
+        You must explain your reasoning in 1-2 sentences for 'explainability'.
         `;
 
         const response = await ai.models.generateContent({
@@ -52,6 +46,28 @@ export const runAICorrelation = async (
             contents: prompt,
             config: {
                 responseMimeType: "application/json",
+                responseSchema: {
+                    type: "object",
+                    properties: {
+                        riskScore: {
+                            type: "number",
+                            description: "Risk score from 0 to 100"
+                        },
+                        threatType: {
+                            type: "string",
+                            description: "Type of threat (e.g., 'Normal', 'Account Takeover', 'Money Laundering', 'Quantum Risk Indicator')"
+                        },
+                        isQuantumThreat: {
+                            type: "boolean",
+                            description: "Whether the threat is a quantum risk indicator"
+                        },
+                        explainability: {
+                            type: "string",
+                            description: "A 1-2 sentence explanation of WHY you assigned this score"
+                        }
+                    },
+                    required: ["riskScore", "threatType", "isQuantumThreat", "explainability"]
+                }
             }
         });
 

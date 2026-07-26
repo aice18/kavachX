@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import LanguageSwitcher from '../components/LanguageSwitcher';
-import { LayoutDashboard, ShieldAlert, Bot, LogOut, Settings, Bell, Menu, Target, FlaskConical, Server, Activity } from 'lucide-react';
+import { LayoutDashboard, ShieldAlert, Bot, LogOut, Settings, Bell, Menu, Target, FlaskConical, Server, Activity, Database } from 'lucide-react';
 import { useAuth } from '../AuthContext';
 import { useTranslation } from 'react-i18next';
 import FloatingBot from '../components/FloatingBot';
@@ -32,6 +32,7 @@ export default function DashboardLayout() {
   const navItems = [
     { name: t('sidebar.executive', 'Executive Command Center'), icon: LayoutDashboard, path: '/dashboard/executive', allowedRoles: ['l3_soc'] },
     { name: t('sidebar.soc', 'SOC Console'), icon: ShieldAlert, path: '/dashboard' },
+    { name: t('sidebar.usecase', 'Live Use Case (Demo)'), icon: Database, path: '/dashboard/usecase' },
     { name: t('sidebar.fraud', 'Fraud Management'), icon: Activity, path: '/dashboard/fraud' },
     { name: t('sidebar.threat', 'Threat Forecast'), icon: Target, path: '/dashboard/risk' },
     { name: t('sidebar.investigator', 'Risk Analysis'), icon: Bot, path: '/dashboard/investigator' },

@@ -100,3 +100,16 @@ export const getFraudCorrelationGraph = async () => {
     ]
   };
 };
+
+/**
+ * Enterprise Architecture: Decoupled Graph Writes
+ * Simulates asynchronously writing batches of transactions to the Graph DB
+ * so that the real-time processing path (Kafka -> Flink -> Redis -> Edge Rules) 
+ * is not blocked by slow disk I/O on Neo4j.
+ */
+export const batchAsyncWrite = async (events: any[]) => {
+  // In a real system, this consumes from a 'graph-ingestion' Kafka topic.
+  console.log(`[Neo4j] Asynchronously batched ${events.length} events into the graph.`);
+  return { status: 'queued', count: events.length };
+};
+

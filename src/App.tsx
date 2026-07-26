@@ -10,6 +10,8 @@ import FraudDashboard from './pages/FraudDashboard';
 import RiskAnalytics from './pages/RiskAnalytics';
 import AIInvestigator from './pages/AIInvestigator';
 import CryptographyAssets from './pages/CryptographyAssets';
+import WhatIfSimulator from './pages/WhatIfSimulator';
+import UseCaseRTGSFraud from './pages/UseCaseRTGSFraud';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
@@ -33,6 +35,8 @@ export default function App() {
             <Route path="risk" element={<RiskAnalytics />} />
             <Route path="investigator" element={<AIInvestigator />} />
             <Route path="crypto" element={<CryptographyAssets />} />
+            <Route path="simulator" element={<WhatIfSimulator />} />
+            <Route path="usecase" element={<UseCaseRTGSFraud />} />
           </Route>
         </Routes>
       </BrowserRouter>

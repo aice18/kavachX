@@ -1,8 +1,10 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { motion, Variants } from 'motion/react';
 import { ShieldAlert, Network, ArrowRight, Server, Smartphone, Key, Bot } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import RiskCopilot from '../components/RiskCopilot';
+import FraudGraph3D from '../components/FraudGraph3D';
 
 export default function AIInvestigator() {
   const { t } = useTranslation();
@@ -30,6 +32,10 @@ export default function AIInvestigator() {
           Risk Analysis
         </h2>
         <p className="text-slate-500 text-sm mt-1">Multi-domain alert correlation and generative AI mitigation.</p>
+      </div>
+
+      <div className="w-full shrink-0">
+         <FraudGraph3D />
       </div>
 
       <div className="flex-1 min-h-0 flex flex-col lg:flex-row gap-6">
@@ -92,11 +98,14 @@ export default function AIInvestigator() {
                 </div>
               </div>
 
-              <div className="pt-4 flex justify-center">
+              <div className="pt-4 flex justify-between items-center">
                 <div className="bg-indigo-600 text-white px-4 py-2 rounded-full text-xs font-bold shadow-md flex items-center gap-2">
                   <Bot className="w-4 h-4" />
                   Correlated Incident: INC-9942
                 </div>
+                <Link to="/dashboard/simulator" className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1 group">
+                  Proceed to Mitigation <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Link>
               </div>
             </div>
 

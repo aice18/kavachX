@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { ShieldAlert, Search, Server, Database, Network, ArrowRight, BarChart3, Activity, PieChart as PieChartIcon, Filter, Clock, CheckCircle2, Lock, Pause, ShieldBan, X, Play, Brain, RefreshCw, RotateCcw } from 'lucide-react';
+import { ShieldAlert, Search, Server, Database, Network, ArrowRight, BarChart3, Activity, PieChart as PieChartIcon, Filter, Clock, CheckCircle2, Lock, Pause, ShieldBan, X, Play, Brain, RefreshCw, RotateCcw, ShieldCheck, FileDigit } from 'lucide-react';
 import { io } from 'socket.io-client';
 import { motion, AnimatePresence, Variants } from 'motion/react';
 import { useTranslation } from 'react-i18next';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, Cell, PieChart, Pie } from 'recharts';
+import { useAuth } from '../AuthContext';
 import ThreatMap from '../components/ThreatMap';
 import LiveThreatGraph from '../components/LiveThreatGraph';
 import AICopilotSidebar from '../components/AICopilotSidebar';
@@ -18,6 +19,28 @@ export default function SOCDashboard() {
   const [mitigating, setMitigating] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [aiAnalysis, setAiAnalysis] = useState<any>(null);
+  const [executeResult, setExecuteResult] = useState<{success: boolean, message: string} | null>(null);
+  const [showReport, setShowReport] = useState(false);
+  
+  const { user } = useAuth();
+  const isL1 = user?.role === 'l1_analyst';
+
+  const handleExecutePlaybook = async (actionName: string) => {
+    setMitigating(true);
+    try {
+      const res = await fetch(`${import.meta.env.PROD ? 'https://kavachx-6wm9.onrender.com' : ''}/api/copilot/execute-playbook`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ incidentId: selectedIncident?.id, action: actionName })
+      });
+      const data = await res.json();
+      setExecuteResult(data);
+    } catch (err) {
+      setExecuteResult({ success: false, message: "Execution failed due to network error." });
+    } finally {
+      setMitigating(false);
+    }
+  };
 
   const runAiAnalysis = async (incident: any) => {
     setAnalyzing(true);
@@ -302,6 +325,38 @@ export default function SOCDashboard() {
                   <p className="text-sm text-slate-600 leading-relaxed">
                     {t('soc.active_vectors_p1', '')}<strong className="text-slate-900">{data.activeIncidents}</strong> {t('soc.active_vectors_p2', 'active threat vectors detected in the last 24 hours requiring immediate review.')}
                   </p>
+               </div>
+              </div>
+           </motion.div>
+
+          {/* Data Pipeline Health (Tier-1 Scale Metrics) */}
+          <motion.div variants={item} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+             <div className="flex justify-between items-start mb-4">
+               <div>
+                 <h3 className="text-sm font-semibold text-slate-900 flex items-center gap-2">
+                   <Network className="w-4 h-4 text-emerald-500" />
+                   Data Pipeline Health
+                 </h3>
+                 <p className="text-xs text-slate-500 mt-1">Real-time infrastructure metrics (Simulated)</p>
+               </div>
+             </div>
+             
+             <div className="space-y-3">
+               <div className="flex justify-between items-center p-2 bg-slate-50 rounded-lg border border-slate-100">
+                 <span className="text-xs font-medium text-slate-600">Kafka Ingestion Rate</span>
+                 <span className="text-sm font-bold text-slate-900 font-mono">83,412 msg/s</span>
+               </div>
+               <div className="flex justify-between items-center p-2 bg-slate-50 rounded-lg border border-slate-100">
+                 <span className="text-xs font-medium text-slate-600">Flink Window Latency</span>
+                 <span className="text-sm font-bold text-emerald-600 font-mono">12 ms</span>
+               </div>
+               <div className="flex justify-between items-center p-2 bg-slate-50 rounded-lg border border-slate-100">
+                 <span className="text-xs font-medium text-slate-600">Redis Feature Store Hit</span>
+                 <span className="text-sm font-bold text-slate-900 font-mono">99.8%</span>
+               </div>
+               <div className="flex justify-between items-center p-2 bg-slate-50 rounded-lg border border-slate-100">
+                 <span className="text-xs font-medium text-slate-600">Neo4j Async Queue</span>
+                 <span className="text-sm font-bold text-amber-600 font-mono animate-pulse">1,240 pending</span>
                </div>
              </div>
           </motion.div>
@@ -591,28 +646,41 @@ export default function SOCDashboard() {
             </div>
 
             <div className="space-y-3">
-              <button onClick={() => setMitigating(true)} className="w-full flex items-center justify-between p-3 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-xl transition-all group">
+              <button 
+                onClick={() => handleExecutePlaybook('freeze')} 
+                disabled={isL1 || mitigating}
+                title={isL1 ? "L1 Analysts cannot execute mitigation." : ""}
+                className={`w-full flex items-center justify-between p-3 border rounded-xl transition-all group ${isL1 || mitigating ? 'bg-slate-800 text-slate-500 border-slate-700 cursor-not-allowed' : 'bg-red-500/10 hover:bg-red-500/20 text-red-400 border-red-500/30'}`}
+              >
                 <span className="flex items-center gap-2 font-medium text-sm">
                   <Lock className="w-4 h-4" />
-                  {mitigating ? t('soc.executing', 'Executing...') : t('soc.freeze', 'Freeze Account')}
+                  {isL1 ? 'Freeze Account (Requires L3)' : (mitigating ? t('soc.executing', 'Executing...') : t('soc.freeze', 'Freeze Account'))}
                 </span>
-                <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0" />
+                {!isL1 && <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0" />}
               </button>
               
-              <button onClick={() => setMitigating(true)} className="w-full flex items-center justify-between p-3 bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border border-orange-500/30 rounded-xl transition-all group">
+              <button 
+                onClick={() => handleExecutePlaybook('pause')} 
+                disabled={isL1 || mitigating}
+                className={`w-full flex items-center justify-between p-3 border rounded-xl transition-all group ${isL1 || mitigating ? 'bg-slate-800 text-slate-500 border-slate-700 cursor-not-allowed' : 'bg-orange-500/10 hover:bg-orange-500/20 text-orange-400 border-orange-500/30'}`}
+              >
                 <span className="flex items-center gap-2 font-medium text-sm">
                   <Pause className="w-4 h-4" />
-                  {mitigating ? t('soc.executing', 'Executing...') : t('soc.pause', 'Pause RTGS')}
+                  {isL1 ? 'Pause RTGS (Requires L3)' : (mitigating ? t('soc.executing', 'Executing...') : t('soc.pause', 'Pause RTGS'))}
                 </span>
-                <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0" />
+                {!isL1 && <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0" />}
               </button>
 
-              <button onClick={() => setMitigating(true)} className="w-full flex items-center justify-between p-3 bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-xl transition-all group">
+              <button 
+                onClick={() => handleExecutePlaybook('isolate')} 
+                disabled={isL1 || mitigating}
+                className={`w-full flex items-center justify-between p-3 border rounded-xl transition-all group ${isL1 || mitigating ? 'bg-slate-800 text-slate-500 border-slate-700 cursor-not-allowed' : 'bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border-blue-500/30'}`}
+              >
                 <span className="flex items-center gap-2 font-medium text-sm">
                   <ShieldBan className="w-4 h-4" />
-                  {mitigating ? t('soc.executing', 'Executing...') : t('soc.isolate', 'Isolate Asset')}
+                  {isL1 ? 'Isolate Asset (Requires L3)' : (mitigating ? t('soc.executing', 'Executing...') : t('soc.isolate', 'Isolate Asset'))}
                 </span>
-                <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0" />
+                {!isL1 && <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity -translate-x-2 group-hover:translate-x-0" />}
               </button>
             </div>
             
@@ -639,9 +707,14 @@ export default function SOCDashboard() {
                  </motion.div>
                )}
 
-               <button onClick={() => setMitigating(true)} className="w-full py-2 bg-slate-800 hover:bg-slate-700 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2">
+               <button onClick={() => handleExecutePlaybook('full_playbook')} disabled={isL1 || mitigating} className={`w-full py-2 bg-slate-800 text-sm font-medium rounded-lg transition-colors flex items-center justify-center gap-2 ${isL1 || mitigating ? 'opacity-50 cursor-not-allowed text-slate-500' : 'hover:bg-slate-700 text-white'}`}>
                  <Play className="w-4 h-4" />
                  {mitigating ? <span className="animate-pulse">{t('soc.executing', 'Executing...')}</span> : t('soc.run_playbook', 'Run Automated Playbook')}
+               </button>
+
+               <button onClick={() => setShowReport(true)} className="w-full mt-2 py-2 bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 text-sm font-bold rounded-lg transition-colors flex items-center justify-center gap-2 hover:bg-emerald-600/40">
+                 <FileDigit className="w-4 h-4" />
+                 Generate DFIR Compliance Report
                </button>
             </div>
           </motion.div>
@@ -651,6 +724,146 @@ export default function SOCDashboard() {
       {/* New AI & Architecture Visualizers */}
       <AICopilotSidebar />
       <EdgeTriageTicker />
+
+      {/* DFIR Report Modal */}
+      <AnimatePresence>
+        {showReport && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-slate-900/90 backdrop-blur-md z-[100] flex items-center justify-center p-4 overflow-y-auto"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, y: 10 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.95, y: 10 }}
+              className="bg-slate-900 border border-slate-700 shadow-2xl rounded-2xl max-w-4xl w-full my-8 relative overflow-hidden"
+            >
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+              
+              <div className="p-6 border-b border-slate-800 flex justify-between items-center bg-slate-900 sticky top-0 z-10">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-indigo-500/20 rounded-lg flex items-center justify-center border border-indigo-500/30">
+                    <FileDigit className="w-5 h-5 text-indigo-400" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-white tracking-tight">Digital Forensics & Incident Response Report</h2>
+                    <p className="text-xs text-slate-400 font-mono">Generated by KavachX Gemini Copilot • {new Date().toISOString()}</p>
+                  </div>
+                </div>
+                <button onClick={() => setShowReport(false)} className="text-slate-400 hover:text-white transition-colors p-2 bg-slate-800 rounded-lg">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="p-8 text-slate-300 font-mono text-sm leading-relaxed max-h-[70vh] overflow-y-auto custom-scrollbar">
+                
+                <div className="grid grid-cols-2 gap-4 mb-8">
+                  <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700/50">
+                    <div className="text-xs text-slate-500 mb-1">INCIDENT ID</div>
+                    <div className="text-white font-bold">INC-2026-8891</div>
+                  </div>
+                  <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700/50">
+                    <div className="text-xs text-slate-500 mb-1">SEVERITY</div>
+                    <div className="text-red-400 font-bold uppercase">Critical (Score: 99.8)</div>
+                  </div>
+                  <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700/50">
+                    <div className="text-xs text-slate-500 mb-1">THREAT VECTOR</div>
+                    <div className="text-white font-bold">AiTM Phishing + Session Hijack</div>
+                  </div>
+                  <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700/50">
+                    <div className="text-xs text-slate-500 mb-1">FINANCIAL EXPOSURE</div>
+                    <div className="text-rose-400 font-bold">£5,000,000 (CONTAINED)</div>
+                  </div>
+                </div>
+
+                <h3 className="text-lg text-white font-bold mb-4 flex items-center gap-2 border-b border-slate-700 pb-2"><ShieldAlert className="w-5 h-5 text-rose-500" /> Executive Summary</h3>
+                <p className="mb-6">At 17:00 on Friday, KavachX Autonomous Command Center detected a highly coordinated Corporate Account Takeover attempt targeting the bulk RTGS clearing pipeline. An attacker utilized an Adversary-in-the-Middle (AiTM) phishing kit to bypass MFA and hijack a valid Finance Manager session cookie. The system correlated isolated WAF and IAM alerts with Core Banking telemetry in 142ms via the Neo4j Graph Engine, successfully predicting and pausing a £5,000,000 fraudulent transfer prior to settlement.</p>
+                
+                <h3 className="text-lg text-white font-bold mb-4 flex items-center gap-2 border-b border-slate-700 pb-2"><Activity className="w-5 h-5 text-blue-500" /> MITRE ATT&CK Mapping</h3>
+                <ul className="list-none space-y-2 mb-6">
+                  <li className="flex items-center gap-3"><span className="px-2 py-1 bg-slate-800 rounded border border-slate-700 text-xs font-bold w-24 text-center">T1111</span> Two-Factor Authentication Interception (AiTM)</li>
+                  <li className="flex items-center gap-3"><span className="px-2 py-1 bg-slate-800 rounded border border-slate-700 text-xs font-bold w-24 text-center">T1550.004</span> Web Session Cookie Theft</li>
+                  <li className="flex items-center gap-3"><span className="px-2 py-1 bg-slate-800 rounded border border-slate-700 text-xs font-bold w-24 text-center">T1565.001</span> Data Manipulation: Stored Data (Beneficiary Mod)</li>
+                </ul>
+
+                <h3 className="text-lg text-white font-bold mb-4 flex items-center gap-2 border-b border-slate-700 pb-2"><ShieldCheck className="w-5 h-5 text-emerald-500" /> Automated Mitigation Timeline</h3>
+                <div className="space-y-4 pl-4 border-l-2 border-emerald-500/30 ml-2">
+                  <div className="relative">
+                    <div className="absolute -left-[21px] top-1 w-2 h-2 rounded-full bg-emerald-500"></div>
+                    <span className="text-emerald-400 text-xs font-bold mr-2">T+0ms</span> Attacker initiates RTGS transfer.
+                  </div>
+                  <div className="relative">
+                    <div className="absolute -left-[21px] top-1 w-2 h-2 rounded-full bg-emerald-500"></div>
+                    <span className="text-emerald-400 text-xs font-bold mr-2">T+142ms</span> KavachX Graph Engine correlates VPN + Cookie + IP + Core Banking Txn.
+                  </div>
+                  <div className="relative">
+                    <div className="absolute -left-[21px] top-1 w-2 h-2 rounded-full bg-emerald-500"></div>
+                    <span className="text-emerald-400 text-xs font-bold mr-2">T+250ms</span> Autonomous Playbook triggered by Gemini Flash AI.
+                  </div>
+                  <div className="relative">
+                    <div className="absolute -left-[21px] top-1 w-2 h-2 rounded-full bg-emerald-500"></div>
+                    <span className="text-emerald-400 text-xs font-bold mr-2">T+800ms</span> Ledger Frozen. Session Terminated. Zero Funds Lost.
+                  </div>
+                </div>
+
+              </div>
+              
+              <div className="p-4 bg-slate-800/50 border-t border-slate-700 flex justify-end gap-3">
+                <button onClick={() => setShowReport(false)} className="px-4 py-2 bg-slate-700 hover:bg-slate-600 text-white text-sm font-medium rounded-lg transition-colors">
+                  Close Report
+                </button>
+                <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold rounded-lg transition-colors flex items-center gap-2 shadow-lg shadow-indigo-500/20">
+                  <FileDigit className="w-4 h-4" />
+                  Export as PDF
+                </button>
+              </div>
+
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Execution Success Modal */}
+      <AnimatePresence>
+        {executeResult && (
+          <motion.div 
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[100] flex items-center justify-center p-4"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9, y: 20 }}
+              className="bg-slate-900 border border-emerald-500/30 shadow-2xl shadow-emerald-500/20 rounded-2xl p-8 max-w-md w-full text-center relative overflow-hidden"
+            >
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-400 to-emerald-600 animate-pulse"></div>
+              <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/30">
+                <ShieldCheck className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Playbook Executed</h3>
+              <p className="text-sm text-slate-300 mb-6 whitespace-pre-wrap">{executeResult.message}</p>
+              <button 
+                onClick={() => {
+                  setExecuteResult(null);
+                  if (selectedIncident) {
+                    setData((prev: any) => {
+                      if (!prev) return prev;
+                      return {
+                        ...prev,
+                        riskScore: Math.max(10, prev.riskScore - 25),
+                        activeIncidents: Math.max(0, prev.activeIncidents - 1),
+                        incidentFeed: prev.incidentFeed?.map((inc: any) => 
+                          inc.id === selectedIncident.id ? { ...inc, status: 'CONTAINED', severity: 'low' } : inc
+                        ) || []
+                      };
+                    });
+                  }
+                  setSelectedIncident(null);
+                }}
+                className="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-medium rounded-xl transition-colors"
+              >
+                Acknowledge & Close
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </motion.div>
   );

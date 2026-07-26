@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { motion, Variants } from 'motion/react';
-import { Activity, Search, Filter, ShieldBan, Smartphone, Globe, CreditCard } from 'lucide-react';
+import { Activity, Search, Filter, ShieldBan, Smartphone, Globe, CreditCard, ArrowRight } from 'lucide-react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import ThreatMap from '../components/ThreatMap';
 
 const transactionData = [
   { time: '10:00', normal: 4000, anomalous: 20 },
@@ -130,14 +132,19 @@ export default function FraudDashboard() {
           
           <div className="p-4 flex-1 space-y-3 overflow-y-auto max-h-[350px]">
             {/* Mock Items */}
-            <div className="p-3 bg-red-50 rounded-xl border border-red-100 hover:shadow-md transition-shadow cursor-pointer">
+            <Link to="/dashboard/investigator" className="block p-3 bg-red-50 rounded-xl border border-red-200 hover:border-red-400 hover:shadow-md transition-all cursor-pointer relative overflow-hidden group">
+              <div className="absolute right-0 top-0 bottom-0 w-8 bg-red-100 flex items-center justify-center translate-x-full group-hover:translate-x-0 transition-transform">
+                <ArrowRight className="w-4 h-4 text-red-600" />
+              </div>
               <div className="flex justify-between items-start mb-2">
-                 <h4 className="text-xs font-bold text-red-700 uppercase tracking-wider flex items-center gap-1"><Globe className="w-3 h-3"/> RTGS</h4>
-                 <span className="text-[10px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded">FROZEN</span>
+                 <h4 className="text-xs font-bold text-red-700 uppercase tracking-wider flex items-center gap-1">
+                   <Globe className="w-3 h-3"/> RTGS Attack
+                 </h4>
+                 <span className="text-[10px] font-bold text-red-600 bg-red-100 px-2 py-0.5 rounded animate-pulse">INC-9942</span>
               </div>
               <p className="text-sm text-slate-700 mb-1 font-mono text-xs">TXN-9982-11A</p>
-              <p className="text-xs text-slate-500">Correlated with unusual VPN login from non-compliant IP. Action frozen by AI.</p>
-            </div>
+              <p className="text-xs text-slate-600 font-medium">Correlated with unusual VPN login from non-compliant IP. Click to view AI analysis.</p>
+            </Link>
             
             <div className="p-3 bg-orange-50 rounded-xl border border-orange-100 hover:shadow-md transition-shadow cursor-pointer">
               <div className="flex justify-between items-start mb-2">
@@ -159,6 +166,18 @@ export default function FraudDashboard() {
           </div>
         </motion.div>
       </div>
+
+      {/* Global Threat Map */}
+      <motion.div variants={item} className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm h-[600px] flex flex-col">
+        <h3 className="text-sm font-semibold text-slate-900 mb-4 flex items-center gap-2">
+          <Globe className="w-5 h-5 text-slate-700" />
+          Global Threat Correlation Map
+        </h3>
+        <p className="text-slate-500 text-xs mb-4">Real-time geographic visualization mapping attacker IP origins against transactional beneficiary nodes.</p>
+        <div className="flex-1 min-h-0 rounded-xl overflow-hidden border border-slate-800">
+           <ThreatMap />
+        </div>
+      </motion.div>
     </motion.div>
   );
 }

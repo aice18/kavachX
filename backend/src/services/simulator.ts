@@ -64,11 +64,11 @@ async function initializeEntities() {
     }
 }
 
-async function simulateEvent() {
+export async function simulateEvent(forceFraud = false) {
     if (mockUsers.length === 0) return;
 
     const user = randomElement(mockUsers);
-    const isFraud = Math.random() < 0.1; // 10% chance of fraud anomaly
+    const isFraud = forceFraud || Math.random() < 0.1; // 10% chance of fraud anomaly
     const deviceId = crypto.randomUUID();
     const deviceName = isFraud ? "Unknown Linux Machine" : "Trusted iPhone";
     const ip = isFraud ? "45.22.19.1" : generateIP();

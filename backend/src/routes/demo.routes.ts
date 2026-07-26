@@ -31,4 +31,70 @@ router.post('/trigger-attack', (req, res) => {
     res.json({ success: true, message: 'Demo attack triggered', incident: newIncident });
 });
 
+router.post('/stress-test', async (req, res) => {
+    try {
+        const { count = 54 } = req.body;
+        const { simulateEvent } = await import('../services/simulator.js');
+        
+        // Broadcast that a Kafka stress test is starting
+        io.emit('telemetry_update', {
+            riskScore: 99,
+            activeIncidents: count,
+            xgbAccuracy: 99.9,
+            rfAccuracy: 98.5
+        });
+
+        const promises = [];
+        for (let i = 0; i < count; i++) {
+            // Push exactly 54 concurrent promises (force fraud = true)
+            promises.push(simulateEvent(true));
+        }
+        
+        await Promise.all(promises);
+        
+        // Emit 54 rapid incidents to the UI
+        for (let i = 0; i < count; i++) {
+            setTimeout(() => {
+                io.emit('critical_incident', {
+                    id: `INC-KAFKA-${Math.floor(Math.random() * 10000)}`,
+                    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+                    type: 'Kafka Burst Anomaly',
+                    user: 'USR_' + Math.floor(Math.random() * 9999),
+                    status: 'Active',
+                    riskScore: 99
+                });
+            }, i * 50); // Stagger by 50ms for visual effect
+        }
+
+        res.json({ success: true, message: `Successfully injected ${count} concurrent attacks via mock Kafka stream.` });
+    } catch (err: any) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+router.post('/money-mule', async (req, res) => {
+    try {
+        // Generate a multi-hop money mule transaction
+        const incidentId = `INC-MULE-${Math.floor(Math.random() * 10000)}`;
+        
+        io.emit('telemetry_update', { riskScore: 95, activeIncidents: 1, xgbAccuracy: 98, rfAccuracy: 97 });
+        
+        io.emit('critical_incident', {
+            id: incidentId,
+            time: new Date().toLocaleTimeString(),
+            type: 'Multi-Hop Money Mule Ring',
+            user: 'COMPROMISED_CORP',
+            status: 'Active',
+            riskScore: 95
+        });
+
+        res.json({ 
+            success: true, 
+            message: 'Money Mule Ring detected. Topology: Corp Account -> Mule A (50%) -> Mule B (25%) / Mule C (25%) -> Offshore Account.' 
+        });
+    } catch (err: any) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 export default router;

@@ -1,16 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, useAnimation, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { ArrowRight, Activity, Box, BrainCircuit, ShieldAlert, KeyRound, Server } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../components/LanguageSwitcher';
 import UseCase from '../components/UseCase';
 import ThreatMap from '../components/ThreatMap';
+import { useAuth } from '../AuthContext';
 
 export default function Landing() {
   const { t } = useTranslation();
+  const { login } = useAuth();
+  const navigate = useNavigate();
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+
+  const handleStartDemo = () => {
+    // Log the user in as a demo user
+    login('demo-token-123', { email: 'demo@kavachx.com', role: 'admin' });
+    // Navigate straight to the fraud dashboard where the demo begins
+    navigate('/dashboard/fraud');
+  };
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const { clientX, clientY } = e;
@@ -143,16 +153,19 @@ export default function Landing() {
               transition={{ duration: 0.5, delay: 0.4 }}
               className="flex flex-col sm:flex-row items-center justify-center gap-5"
             >
-              <Link to="/login" className="relative group bg-slate-900 text-white px-8 py-4 rounded-2xl font-medium flex items-center gap-2 transition-all shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)] hover:-translate-y-1 w-full sm:w-auto justify-center overflow-hidden">
+              <button 
+                onClick={handleStartDemo}
+                className="relative group bg-slate-900 text-white px-8 py-4 rounded-2xl font-medium flex items-center gap-2 transition-all shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.7)] hover:-translate-y-1 w-full sm:w-auto justify-center overflow-hidden"
+              >
                 <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
                 <span className="relative flex items-center gap-2">
-                  {t('landing.launch', 'Launch Platform')}
+                  Start Live Demo
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </span>
-              </Link>
-              <button className="bg-white/80 backdrop-blur-md text-slate-800 border border-slate-200 px-8 py-4 rounded-2xl font-medium hover:bg-white transition-all shadow-sm hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto">
-                {t('landing.explore', 'Explore Solutions')}
               </button>
+              <Link to="/login" className="bg-white/80 backdrop-blur-md text-slate-800 border border-slate-200 px-8 py-4 rounded-2xl font-medium hover:bg-white transition-all shadow-sm hover:shadow-xl hover:-translate-y-1 w-full sm:w-auto flex justify-center">
+                Analyst Login
+              </Link>
             </motion.div>
           </div>
         </section>
